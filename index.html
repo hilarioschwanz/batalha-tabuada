@@ -12,58 +12,67 @@
         body { 
             font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; 
             margin: 0; display: flex; flex-direction: column; align-items: center; 
-            min-height: 100vh; padding: 20px 10px;
+            min-height: 100vh; padding: 10px;
         }
-        
-        .arena-layout { display: flex; gap: 20px; width: 100%; max-width: 1200px; justify-content: center; align-items: flex-start; }
-        
-        /* ABAS LATERAIS */
-        .sponsor-col { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
-        .ad-container { 
-            border-radius: 15px; padding: 10px; text-align: center; 
-            border: 1px solid #444; background: #16213e; min-height: 140px; 
-            display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: 0.3s;
-        }
-        .ad-container:hover { border-color: var(--gold); transform: translateY(-3px); }
-        .media-slot { width: 100%; aspect-ratio: 1/1; border-radius: 10px; background: #222; margin-bottom: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .media-slot img { width: 100%; height: 100%; object-fit: cover; }
-        .ad-text { font-size: 0.7rem; color: var(--gold); font-weight: bold; text-transform: uppercase; }
 
+        /* BANNER ROTATIVO */
+        .banner-wrapper {
+            width: 100%; max-width: 800px; margin-bottom: 20px;
+            background: #16213e; border-radius: 20px; border: 2px solid #444;
+            overflow: hidden; position: relative; height: 120px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slide {
+            position: absolute; inset: 0; display: flex; align-items: center;
+            padding: 15px; opacity: 0; transition: opacity 0.8s ease-in-out;
+            background: linear-gradient(90deg, #16213e 0%, #1a1a2e 100%);
+        }
+        .slide.active { opacity: 1; z-index: 5; }
+        .slide img { height: 90px; width: 90px; object-fit: cover; border-radius: 12px; margin-right: 20px; border: 2px solid var(--gold); }
+        .slide-info { text-align: left; }
+        .slide-title { color: var(--gold); font-weight: 800; font-size: 1.1rem; text-transform: uppercase; margin: 0; }
+        .slide-text { font-size: 0.9rem; color: #ccc; margin-top: 4px; }
+
+        .arena-layout { width: 100%; max-width: 600px; }
+        
         .card { 
             background: #fff; color: var(--dark); padding: 30px; border-radius: 30px; 
-            text-align: center; flex: 2; box-shadow: 0 20px 60px rgba(0,0,0,0.5); 
-            min-width: 320px; position: relative;
+            text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); 
+            position: relative; width: 100%;
         }
         
         .question { font-size: clamp(3rem, 10vh, 5rem); font-weight: 900; color: var(--primary); margin: 20px 0; }
         #ans { width: 100%; max-width: 200px; font-size: 2.5rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; outline: none; }
         .btn-main { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; transition: 0.2s; }
-        .btn-main:active { transform: scale(0.98); }
         
         .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 600; }
         
         #ranking-box, #cert-box { display: none; position: absolute; inset: 0; background: white; z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333; }
-        .rank-item { text-align: left; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.8rem; line-height: 1.4; }
-        .certificate { border: 8px double var(--gold); padding: 15px; background: #fffcf0; height: 80%; display: flex; flex-direction: column; justify-content: center; }
-
+        .rank-item { text-align: left; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.8rem; }
+        
         #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 90%; max-width: 400px; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
         .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
 
-        @media (max-width: 900px) { 
-            .arena-layout { flex-direction: column; align-items: center; } 
-            .sponsor-col { flex-direction: row; width: 100%; overflow-x: auto; padding-bottom: 10px; }
-            .ad-container { width: 150px; flex-shrink: 0; }
+        footer { margin-top: 30px; text-align: center; font-size: 0.8rem; opacity: 0.5; color: white; }
+        .visit-counter { margin-top: 5px; font-weight: bold; color: var(--gold); }
+
+        @media (max-width: 500px) {
+            .banner-wrapper { height: 100px; }
+            .slide img { height: 60px; width: 60px; margin-right: 12px; }
+            .slide-title { font-size: 0.9rem; }
+            .slide-text { font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="arena-layout">
-        <div class="sponsor-col" id="col-left"></div>
+    <div class="banner-wrapper" id="banner-area">
+        </div>
 
+    <div class="arena-layout">
         <div id="setup-screen" class="card">
             <div id="ranking-box">
-                <h2 id="rank-title" style="color:var(--primary)">🏆 RANKING GLOBAL</h2>
+                <h2 style="color:var(--primary)">🏆 RANKING GLOBAL</h2>
                 <div id="ranking-list"></div>
                 <button class="btn-main" onclick="fecharJanelas()" style="background:#888">VOLTAR</button>
             </div>
@@ -71,7 +80,7 @@
             <strong style="color:var(--accent)">👨‍🏫 Hilário Schwanz</strong>
             <h1 style="font-size: 1.4rem; margin: 10px 0;">⚔️ BATALHA DA TABUADA</h1>
             
-            <input type="text" id="nome-aluno" placeholder="Digite seu Nome Completo" style="width:100%; padding:15px; border-radius:12px; border:2px solid #ddd; margin: 10px 0; text-align: center;" oninput="validarNome()">
+            <input type="text" id="nome-aluno" placeholder="Nome Completo" style="width:100%; padding:15px; border-radius:12px; border:2px solid #ddd; margin: 10px 0; text-align: center;" oninput="validarNome()">
             
             <div id="lvls">
                 <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)">🛡️ Nível 1</div>
@@ -86,242 +95,150 @@
 
         <div id="game-screen" class="card" style="display:none;">
             <div id="cert-box">
-                <div class="certificate">
-                    <h2 style="margin:0; font-family: serif; color: var(--primary)">MESTRE DA TABUADA</h2>
-                    <p style="margin:5px 0">Certificamos que:</p>
-                    <h1 id="cert-nome-txt" style="color:var(--accent); margin:10px 0; text-decoration: underline;"></h1>
-                    <p>Alcançou <b><span id="cert-efic"></span>%</b> de Eficiência!</p>
+                <div style="border: 8px double var(--gold); padding: 15px; background: #fffcf0; height: 80%; display: flex; flex-direction: column; justify-content: center;">
+                    <h2>MESTRE DA TABUADA</h2>
+                    <h1 id="cert-nome-txt" style="color:var(--accent)"></h1>
+                    <p>Eficiência: <span id="cert-efic"></span>%</p>
                     <div style="font-size:3rem">🥇</div>
-                    <p style="font-size:0.8rem; margin-top:20px; border-top: 1px solid #ddd; display: inline-block; padding-top:5px;">Prof. Hilário Schwanz</p>
                 </div>
                 <button class="btn-main" onclick="location.reload()">CONCLUIR</button>
             </div>
 
             <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:10; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
-                <h1 id="go-title" style="margin:0"></h1>
-                <div id="go-icon" style="font-size:4rem; margin:15px 0"></div>
-                <p id="go-stats" style="font-weight:bold; color:#333; line-height: 1.6"></p>
-                <button class="btn-main" onclick="location.reload()">VOLTAR AO MENU</button>
+                <h1 id="go-title"></h1>
+                <div id="go-icon" style="font-size:4rem"></div>
+                <p id="go-stats" style="font-weight:bold; color:#333"></p>
+                <button class="btn-main" onclick="location.reload()">MENU</button>
             </div>
             
             <div id="life-container" style="width:100%; background:#eee; height:12px; border-radius:10px; overflow:hidden; margin-bottom:10px;">
                 <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
             </div>
-            <h2 id="time-txt" style="color:var(--primary); margin:0; font-size: 1.8rem;">--</h2>
+            <h2 id="time-txt" style="color:var(--primary); margin:0">--</h2>
             <div id="q-box" class="question">? x ?</div>
             <input type="number" id="ans" inputmode="numeric">
             <button class="btn-main" onclick="check()">ATACAR!</button>
         </div>
-
-        <div class="sponsor-col" id="col-right"></div>
     </div>
 
-    <footer style="margin-top:30px; text-align: center;">
-        <p style="opacity:0.4; cursor:pointer; font-size: 0.8rem;" onclick="abrirAdmin()">© 2026 Hilário Schwanz</p>
+    <footer>
+        <span onclick="abrirAdmin()" style="cursor:pointer">© 2026 Hilário Schwanz</span>
+        <div class="visit-counter" id="visits">Acessos: ...</div>
     </footer>
 
     <div id="admin-panel">
-        <h3 style="margin-top:0">Configurar Anúncios</h3>
+        <h3>Configurar Banner (Slides)</h3>
         <select id="edit-select" onchange="carregarCampos()" class="admin-input">
-            <option value="ad1">Espaço Lateral 1</option><option value="ad2">Espaço Lateral 2</option>
-            <option value="ad3">Espaço Lateral 3</option><option value="ad4">Espaço Lateral 4</option>
+            <option value="ad1">Slot 1</option><option value="ad2">Slot 2</option>
+            <option value="ad3">Slot 3</option><option value="ad4">Slot 4</option>
+            <option value="ad5">Slot 5</option>
         </select>
-        <input type="text" id="edit-text" placeholder="Nome do Anunciante" class="admin-input">
-        <input type="text" id="edit-url" placeholder="URL da Imagem" class="admin-input">
-        <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
-        <button class="btn-main" onclick="salvarAdmin()">SALVAR ALTERAÇÕES</button>
+        <input type="text" id="edit-text" placeholder="Título do Anúncio" class="admin-input">
+        <input type="text" id="edit-sub" placeholder="Subtítulo/Descrição" class="admin-input">
+        <input type="text" id="edit-url" placeholder="URL da Imagem (Logo)" class="admin-input">
+        <input type="text" id="edit-dest" placeholder="Link de Destino" class="admin-input">
+        <button class="btn-main" onclick="salvarAdmin()">SALVAR NO SLOT</button>
         <button class="btn-main" style="background:#888" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
     </div>
 
     <script>
-        // WEB AUDIO API - GERADOR DE SONS
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
         function playSound(type) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination);
             const now = audioCtx.currentTime;
-
-            if (type === 'hit') { // SOM DE ACERTO (Moeda/Espada)
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(523.25, now); // Dó5
-                osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.1); // Dó6
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now); osc.stop(now + 0.3);
-            } 
-            else if (type === 'miss') { // SOM DE ERRO (Vibração grave)
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(110, now);
-                osc.frequency.linearRampToValueAtTime(55, now + 0.2);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-                osc.start(now); osc.stop(now + 0.2);
-            }
-            else if (type === 'win') { // FANFARRA
-                const notes = [523, 659, 783, 1046];
-                notes.forEach((f, i) => {
-                    const o = audioCtx.createOscillator();
-                    const g = audioCtx.createGain();
-                    o.connect(g); g.connect(audioCtx.destination);
-                    o.frequency.value = f;
-                    g.gain.setValueAtTime(0.1, now + (i * 0.1));
-                    g.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.1) + 0.4);
-                    o.start(now + (i * 0.1)); o.stop(now + (i * 0.1) + 0.4);
-                });
-            }
+            if (type === 'hit') { osc.type = 'triangle'; osc.frequency.setValueAtTime(523, now); osc.frequency.exponentialRampToValueAtTime(1046, now + 0.1); gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3); osc.start(now); osc.stop(now + 0.3); } 
+            else if (type === 'miss') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(110, now); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2); osc.start(now); osc.stop(now + 0.2); }
+            else if (type === 'win') { [523, 659, 783].forEach((f, i) => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = f; g.gain.setValueAtTime(0.1, now + (i * 0.1)); g.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.1) + 0.4); o.start(now + (i * 0.1)); o.stop(now + (i * 0.1) + 0.4); }); }
         }
 
-        let conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
-        let curLvl = 0, nome = "", vida = 100, tentativas = 0, acertos = 0, erros = 0, ativo = false, res, crono, tempo, inicioGame;
+        // LÓGICA DO BANNER ROTATIVO
+        let currentSlide = 0;
+        function renderBanner() {
+            const container = document.getElementById('banner-area');
+            let html = '';
+            let hasAds = false;
 
-        window.onload = () => {
-            document.getElementById('col-left').innerHTML = genAd(1) + genAd(2);
-            document.getElementById('col-right').innerHTML = genAd(3) + genAd(4);
-            aplicarSponsors();
-        };
-
-        function genAd(n) { return `<div id="ad${n}" class="ad-container"><div class="media-slot" id="img-ad${n}">LOGO</div><div id="txt-ad${n}" class="ad-text">ANUNCIE AQUI</div></div>`; }
-
-        function aplicarSponsors() {
-            ['ad1','ad2','ad3','ad4'].forEach(id => {
+            ['ad1','ad2','ad3','ad4','ad5'].forEach((id, index) => {
                 const data = JSON.parse(localStorage.getItem('sp_' + id));
-                if(data) {
-                    document.getElementById('txt-'+id).innerText = data.text || "ANUNCIE AQUI";
-                    if(data.url) document.getElementById('img-'+id).innerHTML = `<img src="${data.url}">`;
-                    if(data.dest) document.getElementById(id).onclick = () => window.open(data.dest, '_blank');
+                if(data && data.text) {
+                    hasAds = true;
+                    html += `
+                        <div class="slide ${index === 0 ? 'active' : ''}" onclick="window.open('${data.dest}', '_blank')">
+                            <img src="${data.url || 'https://via.placeholder.com/100'}">
+                            <div class="slide-info">
+                                <p class="slide-title">${data.text}</p>
+                                <p class="slide-text">${data.sub || 'Clique para saber mais'}</p>
+                            </div>
+                        </div>
+                    `;
                 }
             });
+
+            if(!hasAds) {
+                container.innerHTML = `<div class="slide active"><p style="color:#666">Espaço para Anunciantes - Entre em contato</p></div>`;
+            } else {
+                container.innerHTML = html;
+                startAutoSlide();
+            }
         }
 
-        function abrirAdmin() { 
-            if(prompt("Senha:") === "Food2024@") document.getElementById('admin-panel').style.display='block'; 
+        function startAutoSlide() {
+            setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                if(slides.length <= 1) return;
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 5000);
         }
 
+        window.onload = () => {
+            renderBanner();
+            carregarVisitas();
+        };
+
+        async function carregarVisitas() {
+            try {
+                const res = await fetch('https://api.countapi.xyz/hit/hilario-tabuada/visitas');
+                const data = await res.json();
+                document.getElementById('visits').innerText = `Acessos: ${data.value}`;
+            } catch (e) { document.getElementById('visits').innerText = "Acessos: Online"; }
+        }
+
+        function abrirAdmin() { if(prompt("Senha:") === "Food2024@") { document.getElementById('admin-panel').style.display='block'; carregarCampos(); } }
         function salvarAdmin() {
             const id = document.getElementById('edit-select').value;
             localStorage.setItem('sp_'+id, JSON.stringify({
-                text: document.getElementById('edit-text').value, url: document.getElementById('edit-url').value, dest: document.getElementById('edit-dest').value
+                text: document.getElementById('edit-text').value, 
+                sub: document.getElementById('edit-sub').value,
+                url: document.getElementById('edit-url').value, 
+                dest: document.getElementById('edit-dest').value
             }));
-            aplicarSponsors(); alert("Salvo!");
+            alert("Salvo! Recarregue para aplicar."); location.reload();
         }
-
         function carregarCampos() {
             const id = document.getElementById('edit-select').value;
-            const data = JSON.parse(localStorage.getItem('sp_'+id)) || {text:"", url:"", dest:""};
-            document.getElementById('edit-text').value = data.text; document.getElementById('edit-url').value = data.url; document.getElementById('edit-dest').value = data.dest;
+            const data = JSON.parse(localStorage.getItem('sp_'+id)) || {text:"", sub:"", url:"", dest:""};
+            document.getElementById('edit-text').value = data.text;
+            document.getElementById('edit-sub').value = data.sub || "";
+            document.getElementById('edit-url').value = data.url;
+            document.getElementById('edit-dest').value = data.dest;
         }
 
-        function validarNome() {
-            nome = document.getElementById('nome-aluno').value.trim();
-            let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
-            document.getElementById('l1').innerText = p >= 1 ? "🔓" : "🔒";
-            document.getElementById('l2').innerText = p >= 2 ? "🔓" : "🔒";
-        }
+        // LÓGICA DO JOGO
+        let conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
+        let curLvl = 0, nome = "", vida = 100, tentativas = 0, acertos = 0, erros = 0, ativo = false, res, crono, tempo, inicioGame;
 
-        function selecionarNivel(l) {
-            if(!nome) return alert("Digite seu nome!");
-            let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
-            if(l === 'blitz' || l <= p) {
-                curLvl = l;
-                document.querySelectorAll('.lvl-btn').forEach(b => { 
-                    b.style.background = "white"; b.style.color = (b.id === 'btn-blitz') ? "#e94560" : "black"; 
-                });
-                let sel = (l === 'blitz') ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l);
-                sel.style.background = "#0f3460"; sel.style.color = "white";
-                if (audioCtx.state === 'suspended') audioCtx.resume(); // Desbloqueia áudio no mobile
-            }
-        }
-
-        function tentarIniciar() {
-            if(nome.length < 3) return alert("Nome muito curto!");
-            document.getElementById('setup-screen').style.display='none';
-            document.getElementById('game-screen').style.display='block';
-            vida=100; tentativas=0; acertos=0; erros=0; ativo=true; inicioGame = Date.now();
-            if(curLvl === 'blitz') {
-                document.getElementById('life-container').style.display = 'none';
-                tempo = 60;
-                crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) fim(); }, 1000);
-            }
-            rodada();
-        }
-
-        function rodada() {
-            if(!ativo) return;
-            let r1 = Math.floor(Math.random()*8)+2; let r2 = Math.floor(Math.random()*8)+2; res = r1 * r2;
-            document.getElementById('q-box').innerText = r1 + " × " + r2;
-            document.getElementById('ans').value = ""; document.getElementById('ans').focus();
-            if(curLvl !== 'blitz') startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(crono); tempo = conf[curLvl].t;
-            document.getElementById('time-txt').innerText = tempo+"s";
-            crono = setInterval(() => {
-                tempo--; document.getElementById('time-txt').innerText = tempo+"s";
-                if(tempo <= 0) { tentativas++; erros++; vida -= conf[curLvl].d; playSound('miss'); updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); }
-            }, 1000);
-        }
-
-        function check() {
-            let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
-            tentativas++;
-            if(v === res) {
-                acertos++; playSound('hit');
-                if(curLvl !== 'blitz') vida = Math.min(100, vida+5);
-            } else {
-                erros++; playSound('miss');
-                if(curLvl !== 'blitz') vida -= conf[curLvl].d; else tempo = Math.max(0, tempo-2);
-            }
-            if(curLvl !== 'blitz') { updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); } else rodada();
-        }
-
+        function validarNome() { nome = document.getElementById('nome-aluno').value.trim(); let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; document.getElementById('l1').innerText = p >= 1 ? "🔓" : "🔒"; document.getElementById('l2').innerText = p >= 2 ? "🔓" : "🔒"; }
+        function selecionarNivel(l) { if(!nome) return alert("Digite seu nome!"); let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; if(l === 'blitz' || l <= p) { curLvl = l; document.querySelectorAll('.lvl-btn').forEach(b => { b.style.background = "white"; b.style.color = (b.id === 'btn-blitz') ? "#e94560" : "black"; }); let sel = (l === 'blitz') ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l); sel.style.background = "#0f3460"; sel.style.color = "white"; if (audioCtx.state === 'suspended') audioCtx.resume(); } }
+        function tentarIniciar() { if(nome.length < 3) return alert("Nome inválido!"); document.getElementById('setup-screen').style.display='none'; document.getElementById('game-screen').style.display='block'; vida=100; tentativas=0; acertos=0; erros=0; ativo=true; inicioGame = Date.now(); if(curLvl === 'blitz') { document.getElementById('life-container').style.display = 'none'; tempo = 60; crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) fim(); }, 1000); } rodada(); }
+        function rodada() { if(!ativo) return; let r1 = Math.floor(Math.random()*8)+2; let r2 = Math.floor(Math.random()*8)+2; res = r1 * r2; document.getElementById('q-box').innerText = r1 + " × " + r2; document.getElementById('ans').value = ""; document.getElementById('ans').focus(); if(curLvl !== 'blitz') startTimer(); }
+        function startTimer() { clearInterval(crono); tempo = conf[curLvl].t; document.getElementById('time-txt').innerText = tempo+"s"; crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) { tentativas++; erros++; vida -= conf[curLvl].d; playSound('miss'); updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); } }, 1000); }
+        function check() { let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return; tentativas++; if(v === res) { acertos++; playSound('hit'); if(curLvl !== 'blitz') vida = Math.min(100, vida+5); } else { erros++; playSound('miss'); if(curLvl !== 'blitz') vida -= conf[curLvl].d; else tempo = Math.max(0, tempo-2); } if(curLvl !== 'blitz') { updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); } else rodada(); }
         function updateLife() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
-
-        function fim() {
-            ativo = false; clearInterval(crono);
-            let tFinal = ((Date.now() - inicioGame) / 1000).toFixed(1);
-            let efic = ((acertos / tentativas) * 100 || 0).toFixed(1);
-            document.getElementById('game-over').style.display = 'flex';
-            document.getElementById('go-icon').innerText = (vida > 0 || curLvl === 'blitz') ? "🏆" : "💀";
-            document.getElementById('go-title').innerText = (vida > 0 || curLvl === 'blitz') ? "FIM DA BATALHA!" : "VOCÊ CAIU!";
-            document.getElementById('go-stats').innerHTML = `Eficiência: ${efic}%<br>Acertos: ${acertos} | Erros: ${erros}<br>Tempo: ${tFinal}s`;
-
-            if(curLvl === 2 || curLvl === 'blitz') {
-                salvarRanking(nome, efic, acertos, erros, tFinal);
-                if(efic >= 75 && curLvl === 2) {
-                    confetti(); playSound('win');
-                    setTimeout(() => {
-                        document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
-                        document.getElementById('cert-efic').innerText = efic;
-                        document.getElementById('cert-box').style.display = 'block';
-                    }, 1500);
-                }
-            }
-            if(vida > 0 && curLvl !== 'blitz' && curLvl < 2) {
-                let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
-                if(curLvl >= p) localStorage.setItem('prog_'+nome, curLvl+1);
-            }
-        }
-
-        function salvarRanking(n, ef, ac, er, tm) {
-            let r = JSON.parse(localStorage.getItem('rank_global')) || [];
-            r.push({nome: n, efic: ef, acertos: ac, erros: er, tempo: tm, data: new Date().toLocaleDateString()});
-            r.sort((a,b) => b.efic - a.efic || a.tempo - b.tempo);
-            localStorage.setItem('rank_global', JSON.stringify(r.slice(0, 10)));
-        }
-
-        function verRanking() {
-            let r = JSON.parse(localStorage.getItem('rank_global')) || [];
-            document.getElementById('ranking-list').innerHTML = r.map((x, i) => `
-                <div class="rank-item">${i+1}º <b>${x.nome}</b> - ${x.efic}%<br><small>✅ ${x.acertos} acertos em ${x.tempo}s</small></div>
-            `).join('') || "Sem recordes.";
-            document.getElementById('ranking-box').style.display = 'block';
-        }
-
+        function fim() { ativo = false; clearInterval(crono); let tFinal = ((Date.now() - inicioGame) / 1000).toFixed(1); let efic = ((acertos / tentativas) * 100 || 0).toFixed(1); document.getElementById('game-over').style.display = 'flex'; document.getElementById('go-icon').innerText = (vida > 0 || curLvl === 'blitz') ? "🏆" : "💀"; document.getElementById('go-title').innerText = (vida > 0 || curLvl === 'blitz') ? "VITÓRIA!" : "DERROTA!"; document.getElementById('go-stats').innerHTML = `Eficiência: ${efic}%<br>Acertos: ${acertos} | Erros: ${erros}<br>Tempo: ${tFinal}s`; if(curLvl === 2 || curLvl === 'blitz') { salvarRanking(nome, efic, acertos, erros, tFinal); if(efic >= 75 && curLvl === 2) { confetti(); playSound('win'); setTimeout(() => { document.getElementById('cert-nome-txt').innerText = nome.toUpperCase(); document.getElementById('cert-efic').innerText = efic; document.getElementById('cert-box').style.display = 'block'; }, 1500); } } if(vida > 0 && curLvl !== 'blitz' && curLvl < 2) { let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; if(curLvl >= p) localStorage.setItem('prog_'+nome, curLvl+1); } }
+        function salvarRanking(n, ef, ac, er, tm) { let r = JSON.parse(localStorage.getItem('rank_global')) || []; r.push({nome: n, efic: ef, acertos: ac, erros: er, tempo: tm, data: new Date().toLocaleDateString()}); r.sort((a,b) => b.efic - a.efic || a.tempo - b.tempo); localStorage.setItem('rank_global', JSON.stringify(r.slice(0, 10))); }
+        function verRanking() { let r = JSON.parse(localStorage.getItem('rank_global')) || []; document.getElementById('ranking-list').innerHTML = r.map((x, i) => `<div class="rank-item">${i+1}º <b>${x.nome}</b> - ${x.efic}%<br><small>${x.acertos}A em ${x.tempo}s</small></div>`).join('') || "Sem recordes."; document.getElementById('ranking-box').style.display = 'block'; }
         function fecharJanelas() { document.getElementById('ranking-box').style.display = 'none'; }
         document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
