@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalha da Tabuada - Hilário Schwanz</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { --primary: #0f3460; --accent: #e94560; --gold: #f1c40f; --success: #27ae60; --dark: #1a1a2e; }
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; 
+            margin: 0; display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; padding: 20px 10px;
+        }
+        
+        .arena-layout { display: flex; gap: 20px; width: 100%; max-width: 1200px; min-height: 80vh; align-items: flex-start; justify-content: center; }
+
+        .sponsor-col { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Estilo do link do anúncio */
+        .ad-link { text-decoration: none; color: inherit; display: block; transition: transform 0.2s; }
+        .ad-link:hover { transform: scale(1.02); }
+
+        .ad-container { 
+            border-radius: 15px; padding: 10px; text-align: center; 
+            border: 1px solid #444; background: #16213e; min-height: 140px; 
+            display: flex; flex-direction: column; justify-content: center; cursor: pointer;
+        }
+        
+        .media-slot { 
+            width: 100%; aspect-ratio: 1/1; border-radius: 10px; background: #222; 
+            margin-bottom: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; 
+        }
+        .media-slot img { width: 100%; height: 100%; object-fit: cover; }
+        .ad-text { font-size: 0.7rem; color: var(--gold); font-weight: bold; text-transform: uppercase; }
+
+        .card { 
+            background: #fff; color: var(--dark); padding: 30px; border-radius: 30px; 
+            text-align: center; flex: 2; display: flex; flex-direction: column; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5); min-width: 350px; z-index: 10;
+        }
+        
+        .question { font-size: clamp(3.5rem, 12vh, 5.5rem); font-weight: 900; color: var(--primary); margin: 20px 0; }
+        #ans { width: 100%; max-width: 250px; font-size: 3rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; margin: 0 auto; }
+        .btn-main { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 15px; }
+
+        .footer { margin-top: 40px; text-align: center; width: 100%; }
+        .email-link { display: inline-block; padding: 12px 25px; background: #16213e; color: var(--gold); border: 2px solid var(--gold); border-radius: 30px; text-decoration: none; font-weight: bold; }
+
+        @media (max-width: 1000px) {
+            .arena-layout { flex-direction: column; align-items: center; gap: 30px; }
+            .card { order: 1; width: 100%; min-width: unset; }
+            .sponsor-col { order: 2; width: 100%; flex-direction: row; overflow-x: auto; padding: 10px 5px; }
+            .ad-container { width: 160px; flex-shrink: 0; }
+        }
+
+        #admin-panel { 
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; 
+            width: 90%; max-width: 400px; box-shadow: 0 0 100px rgba(0,0,0,0.8);
+        }
+        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="arena-layout">
+        <div class="sponsor-col" id="col-left"></div>
+
+        <div id="setup-screen" class="card">
+            <div>
+                <strong style="color:var(--accent)">👨‍🏫 Hilário Schwanz</strong>
+                <h1 style="margin: 10px 0; font-size: 1.5rem;">⚔️ BATALHA DA TABUADA</h1>
+                <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:15px; border-radius:12px; border:2px solid #ddd; margin: 15px 0;" oninput="validarNome()">
+                <div id="lvls">
+                    <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer;" id="btn-0" onclick="selecionarNivel(0)">🛡️ Nível 1</div>
+                    <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer; color:#aaa" id="btn-1" onclick="selecionarNivel(1)">⚔️ Nível 2 <span id="l1">🔒</span></div>
+                    <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer; color:#aaa" id="btn-2" onclick="selecionarNivel(2)">🐉 Nível 3 <span id="l2">🔒</span></div>
+                </div>
+            </div>
+            <button class="btn-main" onclick="tentarIniciar()">ENTRAR NA ARENA</button>
+        </div>
+
+        <div id="game-screen" class="card" style="display:none;">
+            <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:11; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
+                <h1 id="go-title"></h1>
+                <div id="go-emoji" style="font-size:5rem; margin: 20px 0;"></div>
+                <button class="btn-main" onclick="location.reload()">VOLTAR AO MENU</button>
+            </div>
+            <div>
+                <div style="width:100%; background:#eee; height:15px; border-radius:10px; overflow:hidden; margin-bottom: 10px;">
+                    <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
+                </div>
+                <h2 id="time-txt" style="color:var(--primary); margin: 0;">--</h2>
+                <div id="q-box" class="question">? x ?</div>
+                <input type="number" id="ans" inputmode="numeric">
+                <button class="btn-main" onclick="check()">ATACAR!</button>
+            </div>
+        </div>
+
+        <div class="sponsor-col" id="col-right"></div>
+    </div>
+
+    <div class="footer">
+        <a href="mailto:hilario.schwanz@gmail.com?subject=Anuncio%20Batalha%20da%20Tabuada" class="email-link">
+            📧 ANUNCIE AQUI - CONTATO
+        </a>
+        <p style="margin-top:15px; opacity:0.3; font-size: 0.7rem; cursor: pointer;" onclick="abrirAdmin()">© 2026 Hilário Schwanz</p>
+    </div>
+
+    <div id="admin-panel">
+        <h3 style="margin-top:0">Configurar Anúncio</h3>
+        <select id="edit-select" onchange="carregarCampos()" class="admin-input">
+            <option value="ad1">Anúncio 1</option><option value="ad2">Anúncio 2</option>
+            <option value="ad3">Anúncio 3</option><option value="ad4">Anúncio 4</option>
+        </select>
+        <input type="text" id="edit-text" placeholder="Nome do Comércio" class="admin-input">
+        <input type="text" id="edit-url" placeholder="Link da Imagem (HTTPS)" class="admin-input">
+        <input type="text" id="edit-dest" placeholder="Link de Destino (WhatsApp/Rede)" class="admin-input">
+        <button class="btn-main" onclick="salvarAdmin()">SALVAR</button>
+        <button class="btn-main" style="background:#888; margin-top:10px" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
+    </div>
+
+    <script>
+        const conf = [{t:60, d:20}, {t:30, d:30}, {t:15, d:40}];
+        let curLvl = 0, nome = "", vida = 100, total = 0, acertos = 0, ativo = false, r1, r2, res, crono, tempo;
+
+        window.onload = () => {
+            document.getElementById('col-left').innerHTML = genAd(1) + genAd(2);
+            document.getElementById('col-right').innerHTML = genAd(3) + genAd(4);
+            aplicarSponsors();
+        };
+
+        function genAd(n) { 
+            return `
+            <a id="link-ad${n}" href="#" target="_blank" class="ad-link" style="display:none">
+                <div class="ad-container">
+                    <div class="media-slot" id="img-ad${n}">LOGO</div>
+                    <div id="txt-ad${n}" class="ad-text">ANUNCIE AQUI</div>
+                </div>
+            </a>
+            <div id="box-ad${n}" class="ad-container">
+                <div class="media-slot" id="img-box-ad${n}">LOGO</div>
+                <div id="txt-box-ad${n}" class="ad-text">ANUNCIE AQUI</div>
+            </div>`;
+        }
+
+        function aplicarSponsors() {
+            ['ad1','ad2','ad3','ad4'].forEach(id => {
+                const data = JSON.parse(localStorage.getItem('sp_' + id));
+                const aTag = document.getElementById('link-'+id);
+                const divTag = document.getElementById('box-'+id);
+
+                if(data) {
+                    const targetTxt = data.dest ? 'txt-' : 'txt-box-';
+                    const targetImg = data.dest ? 'img-' : 'img-box-';
+                    
+                    if(data.dest) {
+                        aTag.style.display = "block";
+                        divTag.style.display = "none";
+                        aTag.href = data.dest;
+                        document.getElementById('txt-'+id).innerText = data.text || "ANUNCIE AQUI";
+                        if(data.url) document.getElementById('img-'+id).innerHTML = `<img src="${data.url}">`;
+                    } else {
+                        aTag.style.display = "none";
+                        divTag.style.display = "flex";
+                        document.getElementById('txt-box-'+id).innerText = data.text || "ANUNCIE AQUI";
+                        if(data.url) document.getElementById('img-box-'+id).innerHTML = `<img src="${data.url}">`;
+                    }
+                }
+            });
+        }
+
+        function abrirAdmin() { if(prompt("Senha:") === "admin123") { document.getElementById('admin-panel').style.display='block'; carregarCampos(); } }
+        
+        function salvarAdmin() {
+            const id = document.getElementById('edit-select').value;
+            localStorage.setItem('sp_'+id, JSON.stringify({
+                text: document.getElementById('edit-text').value, 
+                url: document.getElementById('edit-url').value,
+                dest: document.getElementById('edit-dest').value
+            }));
+            aplicarSponsors(); alert("Salvo!");
+        }
+
+        function carregarCampos() {
+            const id = document.getElementById('edit-select').value;
+            const data = JSON.parse(localStorage.getItem('sp_'+id)) || {text:"", url:"", dest:""};
+            document.getElementById('edit-text').value = data.text;
+            document.getElementById('edit-url').value = data.url;
+            document.getElementById('edit-dest').value = data.dest;
+        }
+
+        function validarNome() {
+            nome = document.getElementById('nome-aluno').value;
+            let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
+            document.getElementById('l1').innerText = p >= 1 ? "🔓" : "🔒";
+            document.getElementById('l2').innerText = p >= 2 ? "🔓" : "🔒";
+        }
+
+        function selecionarNivel(l) {
+            let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
+            if(l <= p) {
+                curLvl = l;
+                document.querySelectorAll('.lvl-btn').forEach((b,i) => {
+                    b.style.background = i==l ? "var(--primary)" : "white";
+                    b.style.color = i==l ? "white" : "black";
+                });
+            }
+        }
+
+        function tentarIniciar() {
+            if(nome.length < 3) return alert("Nome curto!");
+            document.getElementById('setup-screen').style.display='none';
+            document.getElementById('game-screen').style.display='flex';
+            vida=100; total=0; acertos=0; ativo=true; rodada();
+        }
+
+        function rodada() {
+            if(!ativo) return;
+            r1 = Math.floor(Math.random()*8)+2; r2 = Math.floor(Math.random()*8)+2; res = r1*r2;
+            document.getElementById('q-box').innerText = `${r1} × ${r2}`;
+            document.getElementById('ans').value = ""; document.getElementById('ans').focus();
+            timer();
+        }
+
+        function timer() {
+            clearInterval(crono); tempo = conf[curLvl].t;
+            crono = setInterval(() => {
+                tempo--; document.getElementById('time-txt').innerText = tempo+"s";
+                if(tempo <= 0) { total++; vida -= conf[curLvl].d; upHUD(); (vida<=0 || total>=20) ? fim() : rodada(); }
+            }, 1000);
+        }
+
+        function check() {
+            let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
+            total++; if(v === res) { acertos++; vida = Math.min(100, vida+10); } else { vida -= conf[curLvl].d; }
+            upHUD(); (vida<=0 || total>=20) ? fim() : rodada();
+        }
+
+        function upHUD() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
+
+        function fim() {
+            ativo = false; clearInterval(crono);
+            document.getElementById('game-over').style.display = 'flex';
+            let win = vida > 0 && acertos >= 12;
+            document.getElementById('go-title').innerText = win ? "VITÓRIA!" : "FIM DE JOGO";
+            document.getElementById('go-emoji').innerText = win ? "🏆" : "🛡️";
+            if(win) { if(curLvl < 2) localStorage.setItem('prog_'+nome, curLvl+1); confetti(); }
+        }
+        document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
+    </script>
+</body>
+</html>
