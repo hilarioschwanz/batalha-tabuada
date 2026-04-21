@@ -15,111 +15,86 @@
             min-height: 100vh; padding: 20px 10px;
         }
         
-        .arena-layout { display: flex; gap: 20px; width: 100%; max-width: 1200px; min-height: 80vh; align-items: flex-start; justify-content: center; }
-        .sponsor-col { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
-        
-        .ad-container { 
-            border-radius: 15px; padding: 10px; text-align: center; 
-            border: 1px solid #444; background: #16213e; min-height: 140px; 
-            display: flex; flex-direction: column; justify-content: center;
-        }
-
+        .arena-layout { display: flex; gap: 20px; width: 100%; max-width: 1200px; justify-content: center; align-items: flex-start; }
         .card { 
             background: #fff; color: var(--dark); padding: 30px; border-radius: 30px; 
-            text-align: center; flex: 2; display: flex; flex-direction: column; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5); min-width: 350px; z-index: 10; position: relative;
+            text-align: center; flex: 2; box-shadow: 0 20px 60px rgba(0,0,0,0.5); 
+            min-width: 320px; position: relative;
         }
         
-        .question { font-size: clamp(3.5rem, 12vh, 5.5rem); font-weight: 900; color: var(--primary); margin: 20px 0; }
-        #ans { width: 100%; max-width: 250px; font-size: 3rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; margin: 0 auto; }
-        .btn-main { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
-
+        .question { font-size: clamp(3rem, 10vh, 5rem); font-weight: 900; color: var(--primary); margin: 20px 0; }
+        #ans { width: 100%; max-width: 200px; font-size: 2.5rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; }
+        .btn-main { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
+        
+        .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; transition: 0.2s; }
+        
         #ranking-box, #cert-box { 
             display: none; position: absolute; inset: 0; background: white; 
-            z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto;
+            z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333;
         }
 
-        .rank-item { 
-            text-align: left; padding: 12px; border-bottom: 1px solid #eee; 
-            font-size: 0.85rem; color: #333; line-height: 1.4;
-        }
-        .rank-item b { color: var(--accent); font-size: 1rem; }
+        .rank-item { text-align: left; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.8rem; }
+        .certificate { border: 8px double var(--gold); padding: 15px; background: #fffcf0; height: 80%; display: flex; flex-direction: column; justify-content: center; }
 
-        .certificate {
-            border: 10px double var(--gold); padding: 20px; background: #fffcf0;
-            color: #333; position: relative; height: 100%; display: flex; flex-direction: column; justify-content: center;
-        }
-
-        @media (max-width: 1000px) {
-            .arena-layout { flex-direction: column; align-items: center; }
-            .card { width: 100%; min-width: unset; }
-            .sponsor-col { width: 100%; flex-direction: row; overflow-x: auto; }
-        }
+        @media (max-width: 800px) { .arena-layout { flex-direction: column; align-items: center; } .card { width: 100%; } }
     </style>
 </head>
 <body>
 
     <div class="arena-layout">
-        <div class="sponsor-col" id="col-left"></div>
-
         <div id="setup-screen" class="card">
             <div id="ranking-box">
-                <h2 style="color:var(--primary)" id="rank-title">🏆 RANKING DE EFICIÊNCIA</h2>
+                <h2 id="rank-title">🏆 RANKING</h2>
                 <div id="ranking-list"></div>
                 <button class="btn-main" onclick="fecharJanelas()" style="background:#888">FECHAR</button>
             </div>
 
-            <div>
-                <strong style="color:var(--accent)">👨‍🏫 Hilário Schwanz</strong>
-                <h1 style="margin: 10px 0; font-size: 1.5rem;">⚔️ BATALHA DA TABUADA</h1>
-                <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:15px; border-radius:12px; border:2px solid #ddd; margin: 15px 0;" oninput="validarNome()">
-                
-                <div id="lvls">
-                    <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer;" id="btn-0" onclick="selecionarNivel(0)">🛡️ Nível 1</div>
-                    <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer; color:#aaa" id="btn-1" onclick="selecionarNivel(1)">⚔️ Nível 2 <span id="l1">🔒</span></div>
-                    <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer; color:#aaa" id="btn-2" onclick="selecionarNivel(2)">🐉 Nível 3 <span id="l2">🔒</span></div>
-                    <div class="lvl-btn" style="padding:15px; border:3px solid var(--accent); border-radius:12px; margin-bottom:10px; cursor:pointer; font-weight:bold; color:var(--accent)" id="btn-blitz" onclick="selecionarNivel('blitz')">⚡ MODO BLITZ (1 MIN)</div>
-                </div>
+            <strong style="color:var(--accent)">👨‍🏫 Hilário Schwanz</strong>
+            <h1 style="font-size: 1.4rem;">⚔️ BATALHA DA TABUADA</h1>
+            
+            <input type="text" id="nome-aluno" placeholder="Seu Nome" style="width:100%; padding:12px; border-radius:10px; border:2px solid #ddd; margin: 10px 0;" oninput="validarNome()">
+            
+            <div id="lvls">
+                <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)">🛡️ Nível 1</div>
+                <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)">⚔️ Nível 2 <span id="l1">🔒</span></div>
+                <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)">🐉 Nível 3 <span id="l2">🔒</span></div>
+                <div class="lvl-btn" id="btn-blitz" style="border-color:var(--accent); color:var(--accent)" onclick="selecionarNivel('blitz')">⚡ MODO BLITZ</div>
             </div>
-            <button class="btn-main" onclick="tentarIniciar()">ENTRAR NA ARENA</button>
-            <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 VER GLOBAL RANKING</button>
+
+            <button class="btn-main" onclick="tentarIniciar()">JOGAR</button>
+            <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 RANKING</button>
         </div>
 
         <div id="game-screen" class="card" style="display:none;">
             <div id="cert-box">
                 <div class="certificate">
-                    <div style="font-family:serif; font-size:1.5rem; font-weight:bold;">CERTIFICADO DE MESTRE</div>
+                    <h2 style="margin:0">MESTRE DA TABUADA</h2>
                     <p>Certificamos que:</p>
-                    <div style="font-size:2rem; color:var(--accent); font-weight:bold; text-decoration:underline;" id="cert-nome-txt"></div>
-                    <p>Dominou a Tabuada com <span id="cert-efic"></span>% de eficiência!</p>
-                    <div style="font-size:3rem;">🥇</div>
-                    <p>Prof. Hilário Schwanz</p>
+                    <h1 id="cert-nome-txt" style="color:var(--accent); margin:10px 0;"></h1>
+                    <p>Eficiência: <span id="cert-efic"></span>%</p>
+                    <div style="font-size:3rem">🥇</div>
                 </div>
-                <button class="btn-main" onclick="location.reload()">FECHAR</button>
+                <button class="btn-main" onclick="location.reload()">SAIR</button>
             </div>
 
-            <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:11; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
+            <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:10; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
                 <h1 id="go-title"></h1>
-                <p id="go-stats" style="font-weight:bold;"></p>
+                <p id="go-stats" style="font-weight:bold; color:#333"></p>
                 <button class="btn-main" onclick="location.reload()">VOLTAR</button>
             </div>
             
-            <div>
-                <div id="life-container" style="width:100%; background:#eee; height:15px; border-radius:10px; overflow:hidden; margin-bottom: 10px;">
-                    <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
-                </div>
-                <h2 id="time-txt" style="color:var(--primary); margin: 0;">--</h2>
-                <div id="q-box" class="question">? x ?</div>
-                <input type="number" id="ans" inputmode="numeric">
-                <button class="btn-main" onclick="check()">RESPONDER</button>
+            <div id="life-container" style="width:100%; background:#eee; height:12px; border-radius:10px; overflow:hidden; margin-bottom:10px;">
+                <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
             </div>
+            <h2 id="time-txt" style="color:var(--primary); margin:0">--</h2>
+            <div id="q-box" class="question">? x ?</div>
+            <input type="number" id="ans" inputmode="numeric">
+            <button class="btn-main" onclick="check()">ATACAR</button>
         </div>
-
-        <div class="sponsor-col" id="col-right"></div>
     </div>
 
     <script>
-        const conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
+        let conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
         let curLvl = 0, nome = "", vida = 100, tentativas = 0, acertos = 0, erros = 0, ativo = false, res, crono, tempo, inicioGame;
 
         function validarNome() {
@@ -133,98 +108,113 @@
             let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
             if(l === 'blitz' || l <= p) {
                 curLvl = l;
-                document.querySelectorAll('.lvl-btn').forEach(b => { b.style.background = "white"; b.style.color = "black"; });
-                const sel = l === 'blitz' ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l);
-                sel.style.background = var(--primary); sel.style.color = "white";
+                document.querySelectorAll('.lvl-btn').forEach(b => { 
+                    b.style.background = "white"; b.style.color = (b.id === 'btn-blitz') ? "#e94560" : "black"; 
+                });
+                let sel = (l === 'blitz') ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l);
+                sel.style.background = "#0f3460"; sel.style.color = "white";
             }
         }
 
         function tentarIniciar() {
-            if(nome.length < 3) return alert("Nome inválido!");
+            if(nome.length < 2) return alert("Digite seu nome!");
             document.getElementById('setup-screen').style.display='none';
-            document.getElementById('game-screen').style.display='flex';
+            document.getElementById('game-screen').style.display='block';
             vida=100; tentativas=0; acertos=0; erros=0; ativo=true; inicioGame = Date.now();
+            if(curLvl === 'blitz') {
+                document.getElementById('life-container').style.display = 'none';
+                tempo = 60;
+                crono = setInterval(() => {
+                    tempo--; document.getElementById('time-txt').innerText = tempo+"s";
+                    if(tempo <= 0) fim();
+                }, 1000);
+            }
             rodada();
         }
 
         function rodada() {
             if(!ativo) return;
-            let r1 = Math.floor(Math.random()*8)+2; let r2 = Math.floor(Math.random()*8)+2; res = r1*r2;
-            document.getElementById('q-box').innerText = `${r1} × ${r2}`;
+            let r1 = Math.floor(Math.random()*8)+2; 
+            let r2 = Math.floor(Math.random()*8)+2; 
+            res = r1 * r2;
+            document.getElementById('q-box').innerText = r1 + " × " + r2;
             document.getElementById('ans').value = ""; document.getElementById('ans').focus();
-            if(curLvl !== 'blitz') iniciarCronometro();
-            else if(!crono) { 
-                tempo = 60; 
-                crono = setInterval(() => { 
-                    tempo--; document.getElementById('time-txt').innerText = tempo+"s";
-                    if(tempo <= 0) fim();
-                }, 1000);
-            }
+            if(curLvl !== 'blitz') startTimer();
         }
 
-        function iniciarCronometro() {
-            clearInterval(crono); tempo = conf[curLvl].t;
+        function startTimer() {
+            clearInterval(crono);
+            tempo = conf[curLvl].t;
+            document.getElementById('time-txt').innerText = tempo+"s";
             crono = setInterval(() => {
-                tempo--; document.getElementById('time-txt').innerText = tempo+"s";
-                if(tempo <= 0) { tentativas++; erros++; vida -= conf[curLvl].d; atualizarVida(); (vida<=0 || tentativas>=20) ? fim() : rodada(); }
+                tempo--;
+                document.getElementById('time-txt').innerText = tempo+"s";
+                if(tempo <= 0) {
+                    tentativas++; erros++;
+                    vida -= conf[curLvl].d;
+                    updateLife();
+                    if(vida <= 0 || tentativas >= 20) fim(); else rodada();
+                }
             }, 1000);
         }
 
         function check() {
-            let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
+            let v = parseInt(document.getElementById('ans').value);
+            if(isNaN(v)) return;
             tentativas++;
-            if(v === res) { acertos++; if(curLvl !== 'blitz') vida = Math.min(100, vida+5); } 
-            else { erros++; if(curLvl !== 'blitz') vida -= conf[curLvl].d; else tempo = Math.max(0, tempo-2); }
-            
-            if(curLvl !== 'blitz') { atualizarVida(); (vida<=0 || tentativas>=20) ? fim() : rodada(); }
-            else rodada();
+            if(v === res) {
+                acertos++;
+                if(curLvl !== 'blitz') vida = Math.min(100, vida+5);
+            } else {
+                erros++;
+                if(curLvl !== 'blitz') vida -= conf[curLvl].d;
+                else tempo = Math.max(0, tempo-2);
+            }
+            if(curLvl !== 'blitz') {
+                updateLife();
+                if(vida <= 0 || tentativas >= 20) fim(); else rodada();
+            } else {
+                rodada();
+            }
         }
 
-        function atualizarVida() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
+        function updateLife() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
 
         function fim() {
-            ativo = false; clearInterval(crono); crono = null;
-            const tempoFinal = ((Date.now() - inicioGame) / 1000).toFixed(1);
-            const efic = ((acertos / tentativas) * 100 || 0).toFixed(1);
+            ativo = false; clearInterval(crono);
+            let tFinal = ((Date.now() - inicioGame) / 1000).toFixed(1);
+            let efic = ((acertos / tentativas) * 100 || 0).toFixed(1);
             
             document.getElementById('game-over').style.display = 'flex';
-            document.getElementById('go-title').innerText = (curLvl==='blitz' || vida > 0) ? "FIM DE JOGO!" : "DERROTA!";
-            document.getElementById('go-stats').innerHTML = `
-                Eficiência: ${efic}%<br>
-                Acertos: ${acertos} | Erros: ${erros}<br>
-                Tempo: ${tempoFinal}s
-            `;
+            document.getElementById('go-title').innerText = (vida > 0 || curLvl === 'blitz') ? "FIM DE JOGO!" : "DERROTA!";
+            document.getElementById('go-stats').innerHTML = `Eficiência: ${efic}%<br>Acertos: ${acertos} | Erros: ${erros}<br>Tempo: ${tFinal}s`;
 
             if(curLvl === 2 || curLvl === 'blitz') {
-                salvarNoRanking(nome, efic, acertos, erros, tempoFinal, curLvl);
-                if(efic >= 80 && curLvl === 2) { 
-                    confetti(); 
+                salvarRanking(nome, efic, acertos, erros, tFinal);
+                if(efic >= 70 && curLvl === 2) {
+                    confetti();
                     setTimeout(() => {
                         document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
                         document.getElementById('cert-efic').innerText = efic;
-                        document.getElementById('cert-box').style.display = "block";
+                        document.getElementById('cert-box').style.display = 'block';
                     }, 1500);
                 }
             }
             if(vida > 0 && curLvl < 2 && curLvl !== 'blitz') localStorage.setItem('prog_'+nome, curLvl+1);
         }
 
-        function salvarNoRanking(n, ef, ac, er, tm, lvl) {
-            let chave = lvl === 'blitz' ? 'rank_blitz' : 'rank_geral';
-            let r = JSON.parse(localStorage.getItem(chave)) || [];
+        function salvarRanking(n, ef, ac, er, tm) {
+            let r = JSON.parse(localStorage.getItem('rank_global')) || [];
             r.push({nome: n, efic: ef, acertos: ac, erros: er, tempo: tm});
             r.sort((a,b) => b.efic - a.efic || a.tempo - b.tempo);
-            localStorage.setItem(chave, JSON.stringify(r.slice(0, 10)));
+            localStorage.setItem('rank_global', JSON.stringify(r.slice(0, 10)));
         }
 
         function verRanking() {
-            const list = document.getElementById('ranking-list');
-            const data = JSON.parse(localStorage.getItem('rank_geral')) || [];
-            list.innerHTML = data.map((x, i) => `
-                <div class="rank-item">
-                    ${i+1}º <b>${x.nome}</b><br>
-                    🎯 Eficiência: ${x.efic}% | ✅ ${x.acertos} | ❌ ${x.erros} | ⏱️ ${x.tempo}s
-                </div>`).join('') || "Nenhum dado ainda.";
+            let r = JSON.parse(localStorage.getItem('rank_global')) || [];
+            document.getElementById('ranking-list').innerHTML = r.map((x, i) => `
+                <div class="rank-item">${i+1}º <b>${x.nome}</b> - ${x.efic}% (✅${x.acertos} ❌${x.erros}) em ${x.tempo}s</div>
+            `).join('') || "Sem recordes.";
             document.getElementById('ranking-box').style.display = 'block';
         }
 
