@@ -18,21 +18,11 @@
         .arena-layout { display: flex; gap: 20px; width: 100%; max-width: 1200px; min-height: 80vh; align-items: flex-start; justify-content: center; }
         .sponsor-col { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
         
-        .ad-link { text-decoration: none; color: inherit; display: block; transition: transform 0.2s; }
-        .ad-link:hover { transform: scale(1.02); }
-
         .ad-container { 
             border-radius: 15px; padding: 10px; text-align: center; 
             border: 1px solid #444; background: #16213e; min-height: 140px; 
-            display: flex; flex-direction: column; justify-content: center; cursor: pointer;
+            display: flex; flex-direction: column; justify-content: center;
         }
-        
-        .media-slot { 
-            width: 100%; aspect-ratio: 1/1; border-radius: 10px; background: #222; 
-            margin-bottom: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; 
-        }
-        .media-slot img { width: 100%; height: 100%; object-fit: cover; }
-        .ad-text { font-size: 0.7rem; color: var(--gold); font-weight: bold; text-transform: uppercase; }
 
         .card { 
             background: #fff; color: var(--dark); padding: 30px; border-radius: 30px; 
@@ -44,37 +34,27 @@
         #ans { width: 100%; max-width: 250px; font-size: 3rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; margin: 0 auto; }
         .btn-main { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
 
-        /* Estilo do Ranking e Certificado */
         #ranking-box, #cert-box { 
             display: none; position: absolute; inset: 0; background: white; 
             z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto;
         }
 
+        .rank-item { 
+            text-align: left; padding: 12px; border-bottom: 1px solid #eee; 
+            font-size: 0.85rem; color: #333; line-height: 1.4;
+        }
+        .rank-item b { color: var(--accent); font-size: 1rem; }
+
         .certificate {
             border: 10px double var(--gold); padding: 20px; background: #fffcf0;
             color: #333; position: relative; height: 100%; display: flex; flex-direction: column; justify-content: center;
         }
-        .cert-title { font-family: 'Times New Roman', serif; color: var(--primary); font-size: 1.8rem; margin-bottom: 10px; }
-        .cert-name { font-size: 2rem; color: var(--accent); font-weight: bold; text-decoration: underline; margin: 15px 0; }
-
-        .rank-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; }
-
-        .footer { margin-top: 40px; text-align: center; width: 100%; }
-        .email-link { display: inline-block; padding: 12px 25px; background: #16213e; color: var(--gold); border: 2px solid var(--gold); border-radius: 30px; text-decoration: none; font-weight: bold; }
 
         @media (max-width: 1000px) {
-            .arena-layout { flex-direction: column; align-items: center; gap: 30px; }
-            .card { order: 1; width: 100%; min-width: unset; }
-            .sponsor-col { order: 2; width: 100%; flex-direction: row; overflow-x: auto; padding: 10px 5px; }
-            .ad-container { width: 160px; flex-shrink: 0; }
+            .arena-layout { flex-direction: column; align-items: center; }
+            .card { width: 100%; min-width: unset; }
+            .sponsor-col { width: 100%; flex-direction: row; overflow-x: auto; }
         }
-
-        #admin-panel { 
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; 
-            width: 90%; max-width: 400px; box-shadow: 0 0 100px rgba(0,0,0,0.8);
-        }
-        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -84,7 +64,7 @@
 
         <div id="setup-screen" class="card">
             <div id="ranking-box">
-                <h2 style="color:var(--primary)">🏆 HALL DA FAMA</h2>
+                <h2 style="color:var(--primary)" id="rank-title">🏆 RANKING DE EFICIÊNCIA</h2>
                 <div id="ranking-list"></div>
                 <button class="btn-main" onclick="fecharJanelas()" style="background:#888">FECHAR</button>
             </div>
@@ -93,123 +73,54 @@
                 <strong style="color:var(--accent)">👨‍🏫 Hilário Schwanz</strong>
                 <h1 style="margin: 10px 0; font-size: 1.5rem;">⚔️ BATALHA DA TABUADA</h1>
                 <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:15px; border-radius:12px; border:2px solid #ddd; margin: 15px 0;" oninput="validarNome()">
+                
                 <div id="lvls">
                     <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer;" id="btn-0" onclick="selecionarNivel(0)">🛡️ Nível 1</div>
                     <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer; color:#aaa" id="btn-1" onclick="selecionarNivel(1)">⚔️ Nível 2 <span id="l1">🔒</span></div>
                     <div class="lvl-btn" style="padding:15px; border:2px solid #eee; border-radius:12px; margin-bottom:10px; cursor:pointer; color:#aaa" id="btn-2" onclick="selecionarNivel(2)">🐉 Nível 3 <span id="l2">🔒</span></div>
+                    <div class="lvl-btn" style="padding:15px; border:3px solid var(--accent); border-radius:12px; margin-bottom:10px; cursor:pointer; font-weight:bold; color:var(--accent)" id="btn-blitz" onclick="selecionarNivel('blitz')">⚡ MODO BLITZ (1 MIN)</div>
                 </div>
             </div>
             <button class="btn-main" onclick="tentarIniciar()">ENTRAR NA ARENA</button>
-            <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 VER RANKING</button>
+            <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 VER GLOBAL RANKING</button>
         </div>
 
         <div id="game-screen" class="card" style="display:none;">
             <div id="cert-box">
                 <div class="certificate">
-                    <div class="cert-title">CERTIFICADO DE MESTRE</div>
-                    <p>Certificamos que o(a) aluno(a):</p>
-                    <div class="cert-name" id="cert-nome-txt">ALUNO</div>
-                    <p>Venceu a <strong>Batalha da Tabuada (Nível 3)</strong> com maestria e agilidade!</p>
-                    <div style="font-size: 3rem; margin: 10px;">🥇</div>
-                    <p style="font-size: 0.8rem; margin-top: 20px;">Data: <span id="cert-data"></span> | Prof. Hilário Schwanz</p>
+                    <div style="font-family:serif; font-size:1.5rem; font-weight:bold;">CERTIFICADO DE MESTRE</div>
+                    <p>Certificamos que:</p>
+                    <div style="font-size:2rem; color:var(--accent); font-weight:bold; text-decoration:underline;" id="cert-nome-txt"></div>
+                    <p>Dominou a Tabuada com <span id="cert-efic"></span>% de eficiência!</p>
+                    <div style="font-size:3rem;">🥇</div>
+                    <p>Prof. Hilário Schwanz</p>
                 </div>
-                <button class="btn-main" onclick="location.reload()" style="background:var(--primary)">VOLTAR AO MENU</button>
+                <button class="btn-main" onclick="location.reload()">FECHAR</button>
             </div>
 
             <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:11; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
                 <h1 id="go-title"></h1>
-                <div id="go-emoji" style="font-size:5rem; margin: 10px 0;"></div>
-                <p id="go-stats" style="font-weight:bold; font-size:1.2rem;"></p>
-                <div id="btn-group-go" style="width: 100%;">
-                    <button id="btn-cert" class="btn-main" style="background:var(--gold); color:var(--dark); display:none;" onclick="gerarCertificado()">📜 VER CERTIFICADO</button>
-                    <button class="btn-main" onclick="location.reload()">VOLTAR AO MENU</button>
-                </div>
+                <p id="go-stats" style="font-weight:bold;"></p>
+                <button class="btn-main" onclick="location.reload()">VOLTAR</button>
             </div>
             
             <div>
-                <div style="width:100%; background:#eee; height:15px; border-radius:10px; overflow:hidden; margin-bottom: 10px;">
+                <div id="life-container" style="width:100%; background:#eee; height:15px; border-radius:10px; overflow:hidden; margin-bottom: 10px;">
                     <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
                 </div>
                 <h2 id="time-txt" style="color:var(--primary); margin: 0;">--</h2>
                 <div id="q-box" class="question">? x ?</div>
                 <input type="number" id="ans" inputmode="numeric">
-                <button class="btn-main" onclick="check()">ATACAR!</button>
+                <button class="btn-main" onclick="check()">RESPONDER</button>
             </div>
         </div>
 
         <div class="sponsor-col" id="col-right"></div>
     </div>
 
-    <div class="footer">
-        <a href="mailto:hilario.schwanz@gmail.com?subject=Anuncio%20Batalha%20da%20Tabuada" class="email-link">📧 ANUNCIE AQUI</a>
-        <p style="margin-top:15px; opacity:0.3; font-size: 0.7rem; cursor: pointer;" onclick="abrirAdmin()">© 2026 Hilário Schwanz</p>
-    </div>
-
-    <div id="admin-panel">
-        <h3 style="margin:0 0 10px 0">Admin Anúncios</h3>
-        <select id="edit-select" onchange="carregarCampos()" class="admin-input">
-            <option value="ad1">Espaço 1</option><option value="ad2">Espaço 2</option>
-            <option value="ad3">Espaço 3</option><option value="ad4">Espaço 4</option>
-        </select>
-        <input type="text" id="edit-text" placeholder="Nome" class="admin-input">
-        <input type="text" id="edit-url" placeholder="Link Imagem" class="admin-input">
-        <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
-        <button class="btn-main" onclick="salvarAdmin()">SALVAR</button>
-        <button class="btn-main" style="background:#888; margin-top:5px" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
-    </div>
-
     <script>
         const conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
-        let curLvl = 0, nome = "", vida = 100, total = 0, acertos = 0, ativo = false, r1, r2, res, crono, tempo, inicioGame;
-
-        window.onload = () => {
-            document.getElementById('col-left').innerHTML = genAd(1) + genAd(2);
-            document.getElementById('col-right').innerHTML = genAd(3) + genAd(4);
-            aplicarSponsors();
-        };
-
-        function genAd(n) { 
-            return `
-            <a id="link-ad${n}" href="#" target="_blank" class="ad-link" style="display:none">
-                <div class="ad-container"><div class="media-slot" id="img-ad${n}">LOGO</div><div id="txt-ad${n}" class="ad-text">ANUNCIE</div></div>
-            </a>
-            <div id="box-ad${n}" class="ad-container"><div class="media-slot" id="img-box-ad${n}">LOGO</div><div id="txt-box-ad${n}" class="ad-text">ANUNCIE</div></div>`;
-        }
-
-        function aplicarSponsors() {
-            ['ad1','ad2','ad3','ad4'].forEach(id => {
-                const data = JSON.parse(localStorage.getItem('sp_' + id));
-                if(data) {
-                    const hasLink = !!data.dest;
-                    document.getElementById('link-'+id).style.display = hasLink ? "block" : "none";
-                    document.getElementById('box-'+id).style.display = hasLink ? "none" : "block";
-                    const pre = hasLink ? "" : "box-";
-                    if(hasLink) document.getElementById('link-'+id).href = data.dest;
-                    document.getElementById('txt-'+pre+id).innerText = data.text || "ANUNCIE";
-                    if(data.url) document.getElementById('img-'+pre+id).innerHTML = `<img src="${data.url}">`;
-                }
-            });
-        }
-
-        function abrirAdmin() { if(prompt("Senha:") === "admin123") document.getElementById('admin-panel').style.display='block'; }
-        
-        function salvarAdmin() {
-            const id = document.getElementById('edit-select').value;
-            localStorage.setItem('sp_'+id, JSON.stringify({
-                text: document.getElementById('edit-text').value, 
-                url: document.getElementById('edit-url').value,
-                dest: document.getElementById('edit-dest').value
-            }));
-            aplicarSponsors(); alert("Salvo!");
-        }
-
-        function carregarCampos() {
-            const id = document.getElementById('edit-select').value;
-            const data = JSON.parse(localStorage.getItem('sp_'+id)) || {text:"", url:"", dest:""};
-            document.getElementById('edit-text').value = data.text;
-            document.getElementById('edit-url').value = data.url;
-            document.getElementById('edit-dest').value = data.dest;
-        }
+        let curLvl = 0, nome = "", vida = 100, tentativas = 0, acertos = 0, erros = 0, ativo = false, res, crono, tempo, inicioGame;
 
         function validarNome() {
             nome = document.getElementById('nome-aluno').value;
@@ -220,89 +131,104 @@
 
         function selecionarNivel(l) {
             let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
-            if(l <= p) {
+            if(l === 'blitz' || l <= p) {
                 curLvl = l;
-                document.querySelectorAll('.lvl-btn').forEach((b,i) => {
-                    b.style.background = i==l ? "var(--primary)" : "white";
-                    b.style.color = i==l ? "white" : "black";
-                });
+                document.querySelectorAll('.lvl-btn').forEach(b => { b.style.background = "white"; b.style.color = "black"; });
+                const sel = l === 'blitz' ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l);
+                sel.style.background = var(--primary); sel.style.color = "white";
             }
         }
 
         function tentarIniciar() {
-            if(nome.length < 3) return alert("Digite seu nome completo!");
+            if(nome.length < 3) return alert("Nome inválido!");
             document.getElementById('setup-screen').style.display='none';
             document.getElementById('game-screen').style.display='flex';
-            vida=100; total=0; acertos=0; ativo=true; inicioGame = Date.now(); rodada();
+            vida=100; tentativas=0; acertos=0; erros=0; ativo=true; inicioGame = Date.now();
+            rodada();
         }
 
         function rodada() {
             if(!ativo) return;
-            r1 = Math.floor(Math.random()*8)+2; r2 = Math.floor(Math.random()*8)+2; res = r1*r2;
+            let r1 = Math.floor(Math.random()*8)+2; let r2 = Math.floor(Math.random()*8)+2; res = r1*r2;
             document.getElementById('q-box').innerText = `${r1} × ${r2}`;
             document.getElementById('ans').value = ""; document.getElementById('ans').focus();
-            timer();
+            if(curLvl !== 'blitz') iniciarCronometro();
+            else if(!crono) { 
+                tempo = 60; 
+                crono = setInterval(() => { 
+                    tempo--; document.getElementById('time-txt').innerText = tempo+"s";
+                    if(tempo <= 0) fim();
+                }, 1000);
+            }
         }
 
-        function timer() {
+        function iniciarCronometro() {
             clearInterval(crono); tempo = conf[curLvl].t;
             crono = setInterval(() => {
                 tempo--; document.getElementById('time-txt').innerText = tempo+"s";
-                if(tempo <= 0) { total++; vida -= conf[curLvl].d; upHUD(); (vida<=0 || total>=20) ? fim() : rodada(); }
+                if(tempo <= 0) { tentativas++; erros++; vida -= conf[curLvl].d; atualizarVida(); (vida<=0 || tentativas>=20) ? fim() : rodada(); }
             }, 1000);
         }
 
         function check() {
             let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
-            total++; if(v === res) { acertos++; vida = Math.min(100, vida+5); } else { vida -= conf[curLvl].d; }
-            upHUD(); (vida<=0 || total>=20) ? fim() : rodada();
+            tentativas++;
+            if(v === res) { acertos++; if(curLvl !== 'blitz') vida = Math.min(100, vida+5); } 
+            else { erros++; if(curLvl !== 'blitz') vida -= conf[curLvl].d; else tempo = Math.max(0, tempo-2); }
+            
+            if(curLvl !== 'blitz') { atualizarVida(); (vida<=0 || tentativas>=20) ? fim() : rodada(); }
+            else rodada();
         }
 
-        function upHUD() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
+        function atualizarVida() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
 
         function fim() {
-            ativo = false; clearInterval(crono);
+            ativo = false; clearInterval(crono); crono = null;
             const tempoFinal = ((Date.now() - inicioGame) / 1000).toFixed(1);
-            document.getElementById('game-over').style.display = 'flex';
-            let win = vida > 0 && acertos >= 15;
+            const efic = ((acertos / tentativas) * 100 || 0).toFixed(1);
             
-            document.getElementById('go-title').innerText = win ? "VITÓRIA!" : "FIM DE JOGO";
-            document.getElementById('go-emoji').innerText = win ? "🏆" : "🛡️";
-            document.getElementById('go-stats').innerText = `Acertos: ${acertos}/20 | Tempo: ${tempoFinal}s`;
+            document.getElementById('game-over').style.display = 'flex';
+            document.getElementById('go-title').innerText = (curLvl==='blitz' || vida > 0) ? "FIM DE JOGO!" : "DERROTA!";
+            document.getElementById('go-stats').innerHTML = `
+                Eficiência: ${efic}%<br>
+                Acertos: ${acertos} | Erros: ${erros}<br>
+                Tempo: ${tempoFinal}s
+            `;
 
-            if(win) { 
-                if(curLvl < 2) localStorage.setItem('prog_'+nome, curLvl+1); 
-                if(curLvl === 2) {
-                    salvarRanking(nome, tempoFinal);
-                    document.getElementById('btn-cert').style.display = "block";
+            if(curLvl === 2 || curLvl === 'blitz') {
+                salvarNoRanking(nome, efic, acertos, erros, tempoFinal, curLvl);
+                if(efic >= 80 && curLvl === 2) { 
+                    confetti(); 
+                    setTimeout(() => {
+                        document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
+                        document.getElementById('cert-efic').innerText = efic;
+                        document.getElementById('cert-box').style.display = "block";
+                    }, 1500);
                 }
-                confetti(); 
             }
+            if(vida > 0 && curLvl < 2 && curLvl !== 'blitz') localStorage.setItem('prog_'+nome, curLvl+1);
         }
 
-        function salvarRanking(n, t) {
-            let r = JSON.parse(localStorage.getItem('rank')) || [];
-            r.push({nome: n, tempo: parseFloat(t)});
-            r.sort((a,b) => a.tempo - b.tempo);
-            localStorage.setItem('rank', JSON.stringify(r.slice(0, 5)));
+        function salvarNoRanking(n, ef, ac, er, tm, lvl) {
+            let chave = lvl === 'blitz' ? 'rank_blitz' : 'rank_geral';
+            let r = JSON.parse(localStorage.getItem(chave)) || [];
+            r.push({nome: n, efic: ef, acertos: ac, erros: er, tempo: tm});
+            r.sort((a,b) => b.efic - a.efic || a.tempo - b.tempo);
+            localStorage.setItem(chave, JSON.stringify(r.slice(0, 10)));
         }
 
         function verRanking() {
             const list = document.getElementById('ranking-list');
-            const data = JSON.parse(localStorage.getItem('rank')) || [];
-            list.innerHTML = data.length ? data.map((x, i) => `
-                <div class="rank-item"><span>${i+1}º ${x.nome}</span><span style="color:var(--accent)">${x.tempo}s</span></div>`).join('') : "<p>Sem recordes!</p>";
+            const data = JSON.parse(localStorage.getItem('rank_geral')) || [];
+            list.innerHTML = data.map((x, i) => `
+                <div class="rank-item">
+                    ${i+1}º <b>${x.nome}</b><br>
+                    🎯 Eficiência: ${x.efic}% | ✅ ${x.acertos} | ❌ ${x.erros} | ⏱️ ${x.tempo}s
+                </div>`).join('') || "Nenhum dado ainda.";
             document.getElementById('ranking-box').style.display = 'block';
         }
 
-        function gerarCertificado() {
-            document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
-            document.getElementById('cert-data').innerText = new Date().toLocaleDateString('pt-BR');
-            document.getElementById('cert-box').style.display = "block";
-        }
-
         function fecharJanelas() { document.getElementById('ranking-box').style.display = 'none'; }
-
         document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
 </body>
