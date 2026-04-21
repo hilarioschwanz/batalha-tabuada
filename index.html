@@ -16,6 +16,19 @@
         }
         
         .arena-layout { display: flex; gap: 20px; width: 100%; max-width: 1200px; justify-content: center; align-items: flex-start; }
+        
+        /* ABAS LATERAIS */
+        .sponsor-col { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
+        .ad-container { 
+            border-radius: 15px; padding: 10px; text-align: center; 
+            border: 1px solid #444; background: #16213e; min-height: 140px; 
+            display: flex; flex-direction: column; justify-content: center; cursor: pointer; transition: 0.3s;
+        }
+        .ad-container:hover { border-color: var(--gold); transform: translateY(-3px); }
+        .media-slot { width: 100%; aspect-ratio: 1/1; border-radius: 10px; background: #222; margin-bottom: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .media-slot img { width: 100%; height: 100%; object-fit: cover; }
+        .ad-text { font-size: 0.7rem; color: var(--gold); font-weight: bold; text-transform: uppercase; }
+
         .card { 
             background: #fff; color: var(--dark); padding: 30px; border-radius: 30px; 
             text-align: center; flex: 2; box-shadow: 0 20px 60px rgba(0,0,0,0.5); 
@@ -23,36 +36,43 @@
         }
         
         .question { font-size: clamp(3rem, 10vh, 5rem); font-weight: 900; color: var(--primary); margin: 20px 0; }
-        #ans { width: 100%; max-width: 200px; font-size: 2.5rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; }
-        .btn-main { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
+        #ans { width: 100%; max-width: 200px; font-size: 2.5rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; outline: none; }
+        .btn-main { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); }
         
-        .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; transition: 0.2s; }
+        .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 600; }
         
-        #ranking-box, #cert-box { 
-            display: none; position: absolute; inset: 0; background: white; 
-            z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333;
-        }
-
-        .rank-item { text-align: left; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.8rem; }
+        #ranking-box, #cert-box { display: none; position: absolute; inset: 0; background: white; z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333; }
+        .rank-item { text-align: left; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.8rem; line-height: 1.4; }
         .certificate { border: 8px double var(--gold); padding: 15px; background: #fffcf0; height: 80%; display: flex; flex-direction: column; justify-content: center; }
 
-        @media (max-width: 800px) { .arena-layout { flex-direction: column; align-items: center; } .card { width: 100%; } }
+        /* PAINEL ADMIN */
+        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 90%; max-width: 400px; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
+        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; }
+
+        @media (max-width: 900px) { 
+            .arena-layout { flex-direction: column; align-items: center; } 
+            .sponsor-col { flex-direction: row; width: 100%; overflow-x: auto; padding-bottom: 10px; }
+            .ad-container { width: 150px; flex-shrink: 0; }
+        }
     </style>
 </head>
 <body>
 
     <div class="arena-layout">
+        <div class="sponsor-col" id="col-left"></div>
+
         <div id="setup-screen" class="card">
             <div id="ranking-box">
-                <h2 id="rank-title">🏆 RANKING</h2>
+                <h2 id="rank-title" style="color:var(--primary)">🏆 RANKING GLOBAL</h2>
                 <div id="ranking-list"></div>
-                <button class="btn-main" onclick="fecharJanelas()" style="background:#888">FECHAR</button>
+                <button class="btn-main" onclick="fecharJanelas()" style="background:#888">VOLTAR</button>
             </div>
 
             <strong style="color:var(--accent)">👨‍🏫 Hilário Schwanz</strong>
-            <h1 style="font-size: 1.4rem;">⚔️ BATALHA DA TABUADA</h1>
+            <h1 style="font-size: 1.4rem; margin: 10px 0;">⚔️ BATALHA DA TABUADA</h1>
             
-            <input type="text" id="nome-aluno" placeholder="Seu Nome" style="width:100%; padding:12px; border-radius:10px; border:2px solid #ddd; margin: 10px 0;" oninput="validarNome()">
+            <input type="text" id="nome-aluno" placeholder="Digite seu Nome Completo" style="width:100%; padding:15px; border-radius:12px; border:2px solid #ddd; margin: 10px 0; text-align: center;" oninput="validarNome()">
             
             <div id="lvls">
                 <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)">🛡️ Nível 1</div>
@@ -61,72 +81,146 @@
                 <div class="lvl-btn" id="btn-blitz" style="border-color:var(--accent); color:var(--accent)" onclick="selecionarNivel('blitz')">⚡ MODO BLITZ</div>
             </div>
 
-            <button class="btn-main" onclick="tentarIniciar()">JOGAR</button>
-            <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 RANKING</button>
+            <button class="btn-main" onclick="tentarIniciar()">ENTRAR NA ARENA</button>
+            <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 VER RANKING</button>
         </div>
 
         <div id="game-screen" class="card" style="display:none;">
             <div id="cert-box">
                 <div class="certificate">
-                    <h2 style="margin:0">MESTRE DA TABUADA</h2>
-                    <p>Certificamos que:</p>
-                    <h1 id="cert-nome-txt" style="color:var(--accent); margin:10px 0;"></h1>
-                    <p>Eficiência: <span id="cert-efic"></span>%</p>
+                    <h2 style="margin:0; font-family: serif; color: var(--primary)">MESTRE DA TABUADA</h2>
+                    <p style="margin:5px 0">Certificamos que:</p>
+                    <h1 id="cert-nome-txt" style="color:var(--accent); margin:10px 0; text-decoration: underline;"></h1>
+                    <p>Alcançou <b><span id="cert-efic"></span>%</b> de Eficiência!</p>
                     <div style="font-size:3rem">🥇</div>
+                    <p style="font-size:0.8rem; margin-top:20px; border-top: 1px solid #ddd; display: inline-block; padding-top:5px;">Prof. Hilário Schwanz</p>
                 </div>
-                <button class="btn-main" onclick="location.reload()">SAIR</button>
+                <button class="btn-main" onclick="location.reload()">CONCLUIR</button>
             </div>
 
             <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:10; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
-                <h1 id="go-title"></h1>
-                <p id="go-stats" style="font-weight:bold; color:#333"></p>
-                <button class="btn-main" onclick="location.reload()">VOLTAR</button>
+                <h1 id="go-title" style="margin:0"></h1>
+                <div id="go-icon" style="font-size:4rem; margin:15px 0"></div>
+                <p id="go-stats" style="font-weight:bold; color:#333; line-height: 1.6"></p>
+                <button class="btn-main" onclick="location.reload()">VOLTAR AO MENU</button>
             </div>
             
             <div id="life-container" style="width:100%; background:#eee; height:12px; border-radius:10px; overflow:hidden; margin-bottom:10px;">
                 <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
             </div>
-            <h2 id="time-txt" style="color:var(--primary); margin:0">--</h2>
+            <h2 id="time-txt" style="color:var(--primary); margin:0; font-size: 1.8rem;">--</h2>
             <div id="q-box" class="question">? x ?</div>
             <input type="number" id="ans" inputmode="numeric">
-            <button class="btn-main" onclick="check()">ATACAR</button>
+            <button class="btn-main" onclick="check()">ATACAR!</button>
         </div>
+
+        <div class="sponsor-col" id="col-right"></div>
+    </div>
+
+    <footer style="margin-top:30px; text-align: center;">
+        <p style="opacity:0.4; cursor:pointer; font-size: 0.8rem;" onclick="abrirAdmin()">© 2026 Hilário Schwanz</p>
+    </footer>
+
+    <div id="admin-panel">
+        <h3 style="margin-top:0">Configurar Anúncios</h3>
+        <select id="edit-select" onchange="carregarCampos()" class="admin-input">
+            <option value="ad1">Espaço Lateral 1</option><option value="ad2">Espaço Lateral 2</option>
+            <option value="ad3">Espaço Lateral 3</option><option value="ad4">Espaço Lateral 4</option>
+        </select>
+        <input type="text" id="edit-text" placeholder="Nome do Anunciante" class="admin-input">
+        <input type="text" id="edit-url" placeholder="URL da Imagem (Logo)" class="admin-input">
+        <input type="text" id="edit-dest" placeholder="Link de Destino (Site/WhatsApp)" class="admin-input">
+        <button class="btn-main" onclick="salvarAdmin()">SALVAR ALTERAÇÕES</button>
+        <button class="btn-main" style="background:#888; margin-top:5px;" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
     </div>
 
     <script>
         let conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
         let curLvl = 0, nome = "", vida = 100, tentativas = 0, acertos = 0, erros = 0, ativo = false, res, crono, tempo, inicioGame;
 
+        window.onload = () => {
+            document.getElementById('col-left').innerHTML = genAd(1) + genAd(2);
+            document.getElementById('col-right').innerHTML = genAd(3) + genAd(4);
+            aplicarSponsors();
+        };
+
+        function genAd(n) { return `<div id="ad${n}" class="ad-container"><div class="media-slot" id="img-ad${n}">LOGO</div><div id="txt-ad${n}" class="ad-text">ANUNCIE AQUI</div></div>`; }
+
+        function aplicarSponsors() {
+            ['ad1','ad2','ad3','ad4'].forEach(id => {
+                const data = JSON.parse(localStorage.getItem('sp_' + id));
+                if(data) {
+                    document.getElementById('txt-'+id).innerText = data.text || "ANUNCIE AQUI";
+                    if(data.url) document.getElementById('img-'+id).innerHTML = `<img src="${data.url}">`;
+                    if(data.dest) document.getElementById(id).onclick = () => window.open(data.dest, '_blank');
+                }
+            });
+        }
+
+        function abrirAdmin() { 
+            const senha = prompt("Digite a senha de administrador:");
+            if(senha === "Food2024@") {
+                document.getElementById('admin-panel').style.display='block';
+                carregarCampos();
+            } else if (senha !== null) {
+                alert("Senha incorreta!");
+            }
+        }
+
+        function salvarAdmin() {
+            const id = document.getElementById('edit-select').value;
+            localStorage.setItem('sp_'+id, JSON.stringify({
+                text: document.getElementById('edit-text').value, 
+                url: document.getElementById('edit-url').value, 
+                dest: document.getElementById('edit-dest').value
+            }));
+            aplicarSponsors(); 
+            alert("Anúncio atualizado com sucesso!");
+        }
+
+        function carregarCampos() {
+            const id = document.getElementById('edit-select').value;
+            const data = JSON.parse(localStorage.getItem('sp_'+id)) || {text:"", url:"", dest:""};
+            document.getElementById('edit-text').value = data.text; 
+            document.getElementById('edit-url').value = data.url; 
+            document.getElementById('edit-dest').value = data.dest;
+        }
+
         function validarNome() {
-            nome = document.getElementById('nome-aluno').value;
+            nome = document.getElementById('nome-aluno').value.trim();
             let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
             document.getElementById('l1').innerText = p >= 1 ? "🔓" : "🔒";
             document.getElementById('l2').innerText = p >= 2 ? "🔓" : "🔒";
         }
 
         function selecionarNivel(l) {
+            if(!nome) return alert("Por favor, digite seu nome primeiro.");
             let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
             if(l === 'blitz' || l <= p) {
                 curLvl = l;
                 document.querySelectorAll('.lvl-btn').forEach(b => { 
-                    b.style.background = "white"; b.style.color = (b.id === 'btn-blitz') ? "#e94560" : "black"; 
+                    b.style.background = "white"; 
+                    b.style.color = (b.id === 'btn-blitz') ? "#e94560" : "black"; 
                 });
                 let sel = (l === 'blitz') ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l);
                 sel.style.background = "#0f3460"; sel.style.color = "white";
+            } else {
+                alert("Nível bloqueado! Vença os anteriores primeiro.");
             }
         }
 
         function tentarIniciar() {
-            if(nome.length < 2) return alert("Digite seu nome!");
+            if(nome.length < 3) return alert("Digite seu nome completo para salvar seu progresso!");
             document.getElementById('setup-screen').style.display='none';
             document.getElementById('game-screen').style.display='block';
             vida=100; tentativas=0; acertos=0; erros=0; ativo=true; inicioGame = Date.now();
             if(curLvl === 'blitz') {
                 document.getElementById('life-container').style.display = 'none';
                 tempo = 60;
-                crono = setInterval(() => {
-                    tempo--; document.getElementById('time-txt').innerText = tempo+"s";
-                    if(tempo <= 0) fim();
+                crono = setInterval(() => { 
+                    tempo--; 
+                    document.getElementById('time-txt').innerText = tempo+"s"; 
+                    if(tempo <= 0) fim(); 
                 }, 1000);
             }
             rodada();
@@ -138,28 +232,27 @@
             let r2 = Math.floor(Math.random()*8)+2; 
             res = r1 * r2;
             document.getElementById('q-box').innerText = r1 + " × " + r2;
-            document.getElementById('ans').value = ""; document.getElementById('ans').focus();
+            document.getElementById('ans').value = ""; 
+            document.getElementById('ans').focus();
             if(curLvl !== 'blitz') startTimer();
         }
 
         function startTimer() {
-            clearInterval(crono);
+            clearInterval(crono); 
             tempo = conf[curLvl].t;
             document.getElementById('time-txt').innerText = tempo+"s";
             crono = setInterval(() => {
-                tempo--;
-                document.getElementById('time-txt').innerText = tempo+"s";
-                if(tempo <= 0) {
-                    tentativas++; erros++;
-                    vida -= conf[curLvl].d;
-                    updateLife();
-                    if(vida <= 0 || tentativas >= 20) fim(); else rodada();
+                tempo--; document.getElementById('time-txt').innerText = tempo+"s";
+                if(tempo <= 0) { 
+                    tentativas++; erros++; vida -= conf[curLvl].d; 
+                    updateLife(); 
+                    if(vida <= 0 || tentativas >= 20) fim(); else rodada(); 
                 }
             }, 1000);
         }
 
         function check() {
-            let v = parseInt(document.getElementById('ans').value);
+            let v = parseInt(document.getElementById('ans').value); 
             if(isNaN(v)) return;
             tentativas++;
             if(v === res) {
@@ -171,7 +264,7 @@
                 else tempo = Math.max(0, tempo-2);
             }
             if(curLvl !== 'blitz') {
-                updateLife();
+                updateLife(); 
                 if(vida <= 0 || tentativas >= 20) fim(); else rodada();
             } else {
                 rodada();
@@ -186,12 +279,17 @@
             let efic = ((acertos / tentativas) * 100 || 0).toFixed(1);
             
             document.getElementById('game-over').style.display = 'flex';
-            document.getElementById('go-title').innerText = (vida > 0 || curLvl === 'blitz') ? "FIM DE JOGO!" : "DERROTA!";
-            document.getElementById('go-stats').innerHTML = `Eficiência: ${efic}%<br>Acertos: ${acertos} | Erros: ${erros}<br>Tempo: ${tFinal}s`;
+            document.getElementById('go-icon').innerText = (vida > 0 || curLvl === 'blitz') ? "🏆" : "💀";
+            document.getElementById('go-title').innerText = (vida > 0 || curLvl === 'blitz') ? "MISSÃO CUMPRIDA!" : "DERROTA!";
+            document.getElementById('go-stats').innerHTML = `
+                <b>Eficiência:</b> ${efic}%<br>
+                <b>Acertos:</b> ${acertos} | <b>Erros:</b> ${erros}<br>
+                <b>Tempo Total:</b> ${tFinal}s
+            `;
 
             if(curLvl === 2 || curLvl === 'blitz') {
                 salvarRanking(nome, efic, acertos, erros, tFinal);
-                if(efic >= 70 && curLvl === 2) {
+                if(efic >= 75 && curLvl === 2) {
                     confetti();
                     setTimeout(() => {
                         document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
@@ -200,12 +298,16 @@
                     }, 1500);
                 }
             }
-            if(vida > 0 && curLvl < 2 && curLvl !== 'blitz') localStorage.setItem('prog_'+nome, curLvl+1);
+            // Avança nível se não for blitz e tiver vencido
+            if(vida > 0 && curLvl !== 'blitz' && curLvl < 2) {
+                let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
+                if(curLvl >= p) localStorage.setItem('prog_'+nome, curLvl+1);
+            }
         }
 
         function salvarRanking(n, ef, ac, er, tm) {
             let r = JSON.parse(localStorage.getItem('rank_global')) || [];
-            r.push({nome: n, efic: ef, acertos: ac, erros: er, tempo: tm});
+            r.push({nome: n, efic: ef, acertos: ac, erros: er, tempo: tm, data: new Date().toLocaleDateString()});
             r.sort((a,b) => b.efic - a.efic || a.tempo - b.tempo);
             localStorage.setItem('rank_global', JSON.stringify(r.slice(0, 10)));
         }
@@ -213,8 +315,11 @@
         function verRanking() {
             let r = JSON.parse(localStorage.getItem('rank_global')) || [];
             document.getElementById('ranking-list').innerHTML = r.map((x, i) => `
-                <div class="rank-item">${i+1}º <b>${x.nome}</b> - ${x.efic}% (✅${x.acertos} ❌${x.erros}) em ${x.tempo}s</div>
-            `).join('') || "Sem recordes.";
+                <div class="rank-item">
+                    ${i+1}º <b>${x.nome}</b> - ${x.efic}% Eficiência<br>
+                    <small>✅ ${x.acertos} acertos em ${x.tempo}s (${x.data})</small>
+                </div>
+            `).join('') || "Ainda não há recordes. Seja o primeiro!";
             document.getElementById('ranking-box').style.display = 'block';
         }
 
