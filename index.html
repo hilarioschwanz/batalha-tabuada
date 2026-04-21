@@ -16,7 +16,6 @@
         }
         
         .arena-layout { display: flex; gap: 20px; width: 100%; max-width: 1200px; min-height: 80vh; align-items: flex-start; justify-content: center; }
-
         .sponsor-col { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
         
         .ad-link { text-decoration: none; color: inherit; display: block; transition: transform 0.2s; }
@@ -45,11 +44,19 @@
         #ans { width: 100%; max-width: 250px; font-size: 3rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; margin: 0 auto; }
         .btn-main { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
 
-        /* Estilo do Ranking */
-        #ranking-box { 
+        /* Estilo do Ranking e Certificado */
+        #ranking-box, #cert-box { 
             display: none; position: absolute; inset: 0; background: white; 
-            z-index: 50; border-radius: 30px; padding: 20px; overflow-y: auto;
+            z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto;
         }
+
+        .certificate {
+            border: 10px double var(--gold); padding: 20px; background: #fffcf0;
+            color: #333; position: relative; height: 100%; display: flex; flex-direction: column; justify-content: center;
+        }
+        .cert-title { font-family: 'Times New Roman', serif; color: var(--primary); font-size: 1.8rem; margin-bottom: 10px; }
+        .cert-name { font-size: 2rem; color: var(--accent); font-weight: bold; text-decoration: underline; margin: 15px 0; }
+
         .rank-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; }
 
         .footer { margin-top: 40px; text-align: center; width: 100%; }
@@ -77,9 +84,9 @@
 
         <div id="setup-screen" class="card">
             <div id="ranking-box">
-                <h2 style="color:var(--primary)">🏆 HALL DA FAMA (NÍVEL 3)</h2>
+                <h2 style="color:var(--primary)">🏆 HALL DA FAMA</h2>
                 <div id="ranking-list"></div>
-                <button class="btn-main" onclick="fecharRanking()" style="background:#888">FECHAR</button>
+                <button class="btn-main" onclick="fecharJanelas()" style="background:#888">FECHAR</button>
             </div>
 
             <div>
@@ -97,12 +104,28 @@
         </div>
 
         <div id="game-screen" class="card" style="display:none;">
+            <div id="cert-box">
+                <div class="certificate">
+                    <div class="cert-title">CERTIFICADO DE MESTRE</div>
+                    <p>Certificamos que o(a) aluno(a):</p>
+                    <div class="cert-name" id="cert-nome-txt">ALUNO</div>
+                    <p>Venceu a <strong>Batalha da Tabuada (Nível 3)</strong> com maestria e agilidade!</p>
+                    <div style="font-size: 3rem; margin: 10px;">🥇</div>
+                    <p style="font-size: 0.8rem; margin-top: 20px;">Data: <span id="cert-data"></span> | Prof. Hilário Schwanz</p>
+                </div>
+                <button class="btn-main" onclick="location.reload()" style="background:var(--primary)">VOLTAR AO MENU</button>
+            </div>
+
             <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:11; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
                 <h1 id="go-title"></h1>
-                <div id="go-emoji" style="font-size:5rem; margin: 20px 0;"></div>
+                <div id="go-emoji" style="font-size:5rem; margin: 10px 0;"></div>
                 <p id="go-stats" style="font-weight:bold; font-size:1.2rem;"></p>
-                <button class="btn-main" onclick="location.reload()">VOLTAR AO MENU</button>
+                <div id="btn-group-go" style="width: 100%;">
+                    <button id="btn-cert" class="btn-main" style="background:var(--gold); color:var(--dark); display:none;" onclick="gerarCertificado()">📜 VER CERTIFICADO</button>
+                    <button class="btn-main" onclick="location.reload()">VOLTAR AO MENU</button>
+                </div>
             </div>
+            
             <div>
                 <div style="width:100%; background:#eee; height:15px; border-radius:10px; overflow:hidden; margin-bottom: 10px;">
                     <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
@@ -118,23 +141,21 @@
     </div>
 
     <div class="footer">
-        <a href="mailto:hilario.schwanz@gmail.com?subject=Anuncio%20Batalha%20da%20Tabuada" class="email-link">
-            📧 ANUNCIE AQUI - CONTATO
-        </a>
+        <a href="mailto:hilario.schwanz@gmail.com?subject=Anuncio%20Batalha%20da%20Tabuada" class="email-link">📧 ANUNCIE AQUI</a>
         <p style="margin-top:15px; opacity:0.3; font-size: 0.7rem; cursor: pointer;" onclick="abrirAdmin()">© 2026 Hilário Schwanz</p>
     </div>
 
     <div id="admin-panel">
-        <h3 style="margin-top:0">Configurar Anúncio</h3>
+        <h3 style="margin:0 0 10px 0">Admin Anúncios</h3>
         <select id="edit-select" onchange="carregarCampos()" class="admin-input">
-            <option value="ad1">Anúncio 1</option><option value="ad2">Anúncio 2</option>
-            <option value="ad3">Anúncio 3</option><option value="ad4">Anúncio 4</option>
+            <option value="ad1">Espaço 1</option><option value="ad2">Espaço 2</option>
+            <option value="ad3">Espaço 3</option><option value="ad4">Espaço 4</option>
         </select>
-        <input type="text" id="edit-text" placeholder="Nome do Comércio" class="admin-input">
-        <input type="text" id="edit-url" placeholder="Link da Imagem (HTTPS)" class="admin-input">
-        <input type="text" id="edit-dest" placeholder="Link de Destino" class="admin-input">
+        <input type="text" id="edit-text" placeholder="Nome" class="admin-input">
+        <input type="text" id="edit-url" placeholder="Link Imagem" class="admin-input">
+        <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
         <button class="btn-main" onclick="salvarAdmin()">SALVAR</button>
-        <button class="btn-main" style="background:#888; margin-top:10px" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
+        <button class="btn-main" style="background:#888; margin-top:5px" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
     </div>
 
     <script>
@@ -150,27 +171,21 @@
         function genAd(n) { 
             return `
             <a id="link-ad${n}" href="#" target="_blank" class="ad-link" style="display:none">
-                <div class="ad-container">
-                    <div class="media-slot" id="img-ad${n}">LOGO</div>
-                    <div id="txt-ad${n}" class="ad-text">ANUNCIE AQUI</div>
-                </div>
+                <div class="ad-container"><div class="media-slot" id="img-ad${n}">LOGO</div><div id="txt-ad${n}" class="ad-text">ANUNCIE</div></div>
             </a>
-            <div id="box-ad${n}" class="ad-container">
-                <div class="media-slot" id="img-box-ad${n}">LOGO</div>
-                <div id="txt-box-ad${n}" class="ad-text">ANUNCIE AQUI</div>
-            </div>`;
+            <div id="box-ad${n}" class="ad-container"><div class="media-slot" id="img-box-ad${n}">LOGO</div><div id="txt-box-ad${n}" class="ad-text">ANUNCIE</div></div>`;
         }
 
         function aplicarSponsors() {
             ['ad1','ad2','ad3','ad4'].forEach(id => {
                 const data = JSON.parse(localStorage.getItem('sp_' + id));
                 if(data) {
-                    const box = document.getElementById(data.dest ? 'link-'+id : 'box-'+id);
-                    const out = document.getElementById(data.dest ? 'box-'+id : 'link-'+id);
-                    box.style.display = "block"; out.style.display = "none";
-                    if(data.dest) box.href = data.dest;
-                    const pre = data.dest ? "" : "box-";
-                    document.getElementById('txt-'+pre+id).innerText = data.text || "ANUNCIE AQUI";
+                    const hasLink = !!data.dest;
+                    document.getElementById('link-'+id).style.display = hasLink ? "block" : "none";
+                    document.getElementById('box-'+id).style.display = hasLink ? "none" : "block";
+                    const pre = hasLink ? "" : "box-";
+                    if(hasLink) document.getElementById('link-'+id).href = data.dest;
+                    document.getElementById('txt-'+pre+id).innerText = data.text || "ANUNCIE";
                     if(data.url) document.getElementById('img-'+pre+id).innerHTML = `<img src="${data.url}">`;
                 }
             });
@@ -215,7 +230,7 @@
         }
 
         function tentarIniciar() {
-            if(nome.length < 3) return alert("Nome curto!");
+            if(nome.length < 3) return alert("Digite seu nome completo!");
             document.getElementById('setup-screen').style.display='none';
             document.getElementById('game-screen').style.display='flex';
             vida=100; total=0; acertos=0; ativo=true; inicioGame = Date.now(); rodada();
@@ -257,7 +272,10 @@
 
             if(win) { 
                 if(curLvl < 2) localStorage.setItem('prog_'+nome, curLvl+1); 
-                if(curLvl === 2) salvarRanking(nome, tempoFinal);
+                if(curLvl === 2) {
+                    salvarRanking(nome, tempoFinal);
+                    document.getElementById('btn-cert').style.display = "block";
+                }
                 confetti(); 
             }
         }
@@ -273,14 +291,17 @@
             const list = document.getElementById('ranking-list');
             const data = JSON.parse(localStorage.getItem('rank')) || [];
             list.innerHTML = data.length ? data.map((x, i) => `
-                <div class="rank-item">
-                    <span>${i+1}º ${x.nome}</span>
-                    <span style="color:var(--accent)">${x.tempo}s</span>
-                </div>`).join('') : "<p>Nenhum recorde ainda!</p>";
+                <div class="rank-item"><span>${i+1}º ${x.nome}</span><span style="color:var(--accent)">${x.tempo}s</span></div>`).join('') : "<p>Sem recordes!</p>";
             document.getElementById('ranking-box').style.display = 'block';
         }
 
-        function fecharRanking() { document.getElementById('ranking-box').style.display = 'none'; }
+        function gerarCertificado() {
+            document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
+            document.getElementById('cert-data').innerText = new Date().toLocaleDateString('pt-BR');
+            document.getElementById('cert-box').style.display = "block";
+        }
+
+        function fecharJanelas() { document.getElementById('ranking-box').style.display = 'none'; }
 
         document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
