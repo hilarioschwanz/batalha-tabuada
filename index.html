@@ -19,7 +19,6 @@
 
         .sponsor-col { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
         
-        /* Estilo do link do anúncio */
         .ad-link { text-decoration: none; color: inherit; display: block; transition: transform 0.2s; }
         .ad-link:hover { transform: scale(1.02); }
 
@@ -39,12 +38,19 @@
         .card { 
             background: #fff; color: var(--dark); padding: 30px; border-radius: 30px; 
             text-align: center; flex: 2; display: flex; flex-direction: column; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5); min-width: 350px; z-index: 10;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5); min-width: 350px; z-index: 10; position: relative;
         }
         
         .question { font-size: clamp(3.5rem, 12vh, 5.5rem); font-weight: 900; color: var(--primary); margin: 20px 0; }
         #ans { width: 100%; max-width: 250px; font-size: 3rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; margin: 0 auto; }
-        .btn-main { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 15px; }
+        .btn-main { background: var(--accent); color: white; border: none; padding: 18px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
+
+        /* Estilo do Ranking */
+        #ranking-box { 
+            display: none; position: absolute; inset: 0; background: white; 
+            z-index: 50; border-radius: 30px; padding: 20px; overflow-y: auto;
+        }
+        .rank-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; }
 
         .footer { margin-top: 40px; text-align: center; width: 100%; }
         .email-link { display: inline-block; padding: 12px 25px; background: #16213e; color: var(--gold); border: 2px solid var(--gold); border-radius: 30px; text-decoration: none; font-weight: bold; }
@@ -70,6 +76,12 @@
         <div class="sponsor-col" id="col-left"></div>
 
         <div id="setup-screen" class="card">
+            <div id="ranking-box">
+                <h2 style="color:var(--primary)">🏆 HALL DA FAMA (NÍVEL 3)</h2>
+                <div id="ranking-list"></div>
+                <button class="btn-main" onclick="fecharRanking()" style="background:#888">FECHAR</button>
+            </div>
+
             <div>
                 <strong style="color:var(--accent)">👨‍🏫 Hilário Schwanz</strong>
                 <h1 style="margin: 10px 0; font-size: 1.5rem;">⚔️ BATALHA DA TABUADA</h1>
@@ -81,12 +93,14 @@
                 </div>
             </div>
             <button class="btn-main" onclick="tentarIniciar()">ENTRAR NA ARENA</button>
+            <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 VER RANKING</button>
         </div>
 
         <div id="game-screen" class="card" style="display:none;">
             <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:11; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
                 <h1 id="go-title"></h1>
                 <div id="go-emoji" style="font-size:5rem; margin: 20px 0;"></div>
+                <p id="go-stats" style="font-weight:bold; font-size:1.2rem;"></p>
                 <button class="btn-main" onclick="location.reload()">VOLTAR AO MENU</button>
             </div>
             <div>
@@ -118,14 +132,14 @@
         </select>
         <input type="text" id="edit-text" placeholder="Nome do Comércio" class="admin-input">
         <input type="text" id="edit-url" placeholder="Link da Imagem (HTTPS)" class="admin-input">
-        <input type="text" id="edit-dest" placeholder="Link de Destino (WhatsApp/Rede)" class="admin-input">
+        <input type="text" id="edit-dest" placeholder="Link de Destino" class="admin-input">
         <button class="btn-main" onclick="salvarAdmin()">SALVAR</button>
         <button class="btn-main" style="background:#888; margin-top:10px" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
     </div>
 
     <script>
-        const conf = [{t:60, d:20}, {t:30, d:30}, {t:15, d:40}];
-        let curLvl = 0, nome = "", vida = 100, total = 0, acertos = 0, ativo = false, r1, r2, res, crono, tempo;
+        const conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
+        let curLvl = 0, nome = "", vida = 100, total = 0, acertos = 0, ativo = false, r1, r2, res, crono, tempo, inicioGame;
 
         window.onload = () => {
             document.getElementById('col-left').innerHTML = genAd(1) + genAd(2);
@@ -150,30 +164,19 @@
         function aplicarSponsors() {
             ['ad1','ad2','ad3','ad4'].forEach(id => {
                 const data = JSON.parse(localStorage.getItem('sp_' + id));
-                const aTag = document.getElementById('link-'+id);
-                const divTag = document.getElementById('box-'+id);
-
                 if(data) {
-                    const targetTxt = data.dest ? 'txt-' : 'txt-box-';
-                    const targetImg = data.dest ? 'img-' : 'img-box-';
-                    
-                    if(data.dest) {
-                        aTag.style.display = "block";
-                        divTag.style.display = "none";
-                        aTag.href = data.dest;
-                        document.getElementById('txt-'+id).innerText = data.text || "ANUNCIE AQUI";
-                        if(data.url) document.getElementById('img-'+id).innerHTML = `<img src="${data.url}">`;
-                    } else {
-                        aTag.style.display = "none";
-                        divTag.style.display = "flex";
-                        document.getElementById('txt-box-'+id).innerText = data.text || "ANUNCIE AQUI";
-                        if(data.url) document.getElementById('img-box-'+id).innerHTML = `<img src="${data.url}">`;
-                    }
+                    const box = document.getElementById(data.dest ? 'link-'+id : 'box-'+id);
+                    const out = document.getElementById(data.dest ? 'box-'+id : 'link-'+id);
+                    box.style.display = "block"; out.style.display = "none";
+                    if(data.dest) box.href = data.dest;
+                    const pre = data.dest ? "" : "box-";
+                    document.getElementById('txt-'+pre+id).innerText = data.text || "ANUNCIE AQUI";
+                    if(data.url) document.getElementById('img-'+pre+id).innerHTML = `<img src="${data.url}">`;
                 }
             });
         }
 
-        function abrirAdmin() { if(prompt("Senha:") === "admin123") { document.getElementById('admin-panel').style.display='block'; carregarCampos(); } }
+        function abrirAdmin() { if(prompt("Senha:") === "admin123") document.getElementById('admin-panel').style.display='block'; }
         
         function salvarAdmin() {
             const id = document.getElementById('edit-select').value;
@@ -215,7 +218,7 @@
             if(nome.length < 3) return alert("Nome curto!");
             document.getElementById('setup-screen').style.display='none';
             document.getElementById('game-screen').style.display='flex';
-            vida=100; total=0; acertos=0; ativo=true; rodada();
+            vida=100; total=0; acertos=0; ativo=true; inicioGame = Date.now(); rodada();
         }
 
         function rodada() {
@@ -236,7 +239,7 @@
 
         function check() {
             let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
-            total++; if(v === res) { acertos++; vida = Math.min(100, vida+10); } else { vida -= conf[curLvl].d; }
+            total++; if(v === res) { acertos++; vida = Math.min(100, vida+5); } else { vida -= conf[curLvl].d; }
             upHUD(); (vida<=0 || total>=20) ? fim() : rodada();
         }
 
@@ -244,12 +247,41 @@
 
         function fim() {
             ativo = false; clearInterval(crono);
+            const tempoFinal = ((Date.now() - inicioGame) / 1000).toFixed(1);
             document.getElementById('game-over').style.display = 'flex';
-            let win = vida > 0 && acertos >= 12;
+            let win = vida > 0 && acertos >= 15;
+            
             document.getElementById('go-title').innerText = win ? "VITÓRIA!" : "FIM DE JOGO";
             document.getElementById('go-emoji').innerText = win ? "🏆" : "🛡️";
-            if(win) { if(curLvl < 2) localStorage.setItem('prog_'+nome, curLvl+1); confetti(); }
+            document.getElementById('go-stats').innerText = `Acertos: ${acertos}/20 | Tempo: ${tempoFinal}s`;
+
+            if(win) { 
+                if(curLvl < 2) localStorage.setItem('prog_'+nome, curLvl+1); 
+                if(curLvl === 2) salvarRanking(nome, tempoFinal);
+                confetti(); 
+            }
         }
+
+        function salvarRanking(n, t) {
+            let r = JSON.parse(localStorage.getItem('rank')) || [];
+            r.push({nome: n, tempo: parseFloat(t)});
+            r.sort((a,b) => a.tempo - b.tempo);
+            localStorage.setItem('rank', JSON.stringify(r.slice(0, 5)));
+        }
+
+        function verRanking() {
+            const list = document.getElementById('ranking-list');
+            const data = JSON.parse(localStorage.getItem('rank')) || [];
+            list.innerHTML = data.length ? data.map((x, i) => `
+                <div class="rank-item">
+                    <span>${i+1}º ${x.nome}</span>
+                    <span style="color:var(--accent)">${x.tempo}s</span>
+                </div>`).join('') : "<p>Nenhum recorde ainda!</p>";
+            document.getElementById('ranking-box').style.display = 'block';
+        }
+
+        function fecharRanking() { document.getElementById('ranking-box').style.display = 'none'; }
+
         document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
 </body>
