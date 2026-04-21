@@ -46,9 +46,8 @@
         .rank-item { text-align: left; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.8rem; line-height: 1.4; }
         .certificate { border: 8px double var(--gold); padding: 15px; background: #fffcf0; height: 80%; display: flex; flex-direction: column; justify-content: center; }
 
-        /* PAINEL ADMIN */
         #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 90%; max-width: 400px; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
-        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; }
+        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
 
         @media (max-width: 900px) { 
             .arena-layout { flex-direction: column; align-items: center; } 
@@ -128,13 +127,54 @@
             <option value="ad3">Espaço Lateral 3</option><option value="ad4">Espaço Lateral 4</option>
         </select>
         <input type="text" id="edit-text" placeholder="Nome do Anunciante" class="admin-input">
-        <input type="text" id="edit-url" placeholder="URL da Imagem (Logo)" class="admin-input">
-        <input type="text" id="edit-dest" placeholder="Link de Destino (Site/WhatsApp)" class="admin-input">
+        <input type="text" id="edit-url" placeholder="URL da Imagem" class="admin-input">
+        <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
         <button class="btn-main" onclick="salvarAdmin()">SALVAR ALTERAÇÕES</button>
-        <button class="btn-main" style="background:#888; margin-top:5px;" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
+        <button class="btn-main" style="background:#888" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
     </div>
 
     <script>
+        // WEB AUDIO API - GERADOR DE SONS
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'hit') { // SOM DE ACERTO (Moeda/Espada)
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // Dó5
+                osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.1); // Dó6
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
+            } 
+            else if (type === 'miss') { // SOM DE ERRO (Vibração grave)
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(110, now);
+                osc.frequency.linearRampToValueAtTime(55, now + 0.2);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
+            }
+            else if (type === 'win') { // FANFARRA
+                const notes = [523, 659, 783, 1046];
+                notes.forEach((f, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.frequency.value = f;
+                    g.gain.setValueAtTime(0.1, now + (i * 0.1));
+                    g.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.1) + 0.4);
+                    o.start(now + (i * 0.1)); o.stop(now + (i * 0.1) + 0.4);
+                });
+            }
+        }
+
         let conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
         let curLvl = 0, nome = "", vida = 100, tentativas = 0, acertos = 0, erros = 0, ativo = false, res, crono, tempo, inicioGame;
 
@@ -158,32 +198,21 @@
         }
 
         function abrirAdmin() { 
-            const senha = prompt("Digite a senha de administrador:");
-            if(senha === "Food2024@") {
-                document.getElementById('admin-panel').style.display='block';
-                carregarCampos();
-            } else if (senha !== null) {
-                alert("Senha incorreta!");
-            }
+            if(prompt("Senha:") === "Food2024@") document.getElementById('admin-panel').style.display='block'; 
         }
 
         function salvarAdmin() {
             const id = document.getElementById('edit-select').value;
             localStorage.setItem('sp_'+id, JSON.stringify({
-                text: document.getElementById('edit-text').value, 
-                url: document.getElementById('edit-url').value, 
-                dest: document.getElementById('edit-dest').value
+                text: document.getElementById('edit-text').value, url: document.getElementById('edit-url').value, dest: document.getElementById('edit-dest').value
             }));
-            aplicarSponsors(); 
-            alert("Anúncio atualizado com sucesso!");
+            aplicarSponsors(); alert("Salvo!");
         }
 
         function carregarCampos() {
             const id = document.getElementById('edit-select').value;
             const data = JSON.parse(localStorage.getItem('sp_'+id)) || {text:"", url:"", dest:""};
-            document.getElementById('edit-text').value = data.text; 
-            document.getElementById('edit-url').value = data.url; 
-            document.getElementById('edit-dest').value = data.dest;
+            document.getElementById('edit-text').value = data.text; document.getElementById('edit-url').value = data.url; document.getElementById('edit-dest').value = data.dest;
         }
 
         function validarNome() {
@@ -194,81 +223,60 @@
         }
 
         function selecionarNivel(l) {
-            if(!nome) return alert("Por favor, digite seu nome primeiro.");
+            if(!nome) return alert("Digite seu nome!");
             let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
             if(l === 'blitz' || l <= p) {
                 curLvl = l;
                 document.querySelectorAll('.lvl-btn').forEach(b => { 
-                    b.style.background = "white"; 
-                    b.style.color = (b.id === 'btn-blitz') ? "#e94560" : "black"; 
+                    b.style.background = "white"; b.style.color = (b.id === 'btn-blitz') ? "#e94560" : "black"; 
                 });
                 let sel = (l === 'blitz') ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l);
                 sel.style.background = "#0f3460"; sel.style.color = "white";
-            } else {
-                alert("Nível bloqueado! Vença os anteriores primeiro.");
+                if (audioCtx.state === 'suspended') audioCtx.resume(); // Desbloqueia áudio no mobile
             }
         }
 
         function tentarIniciar() {
-            if(nome.length < 3) return alert("Digite seu nome completo para salvar seu progresso!");
+            if(nome.length < 3) return alert("Nome muito curto!");
             document.getElementById('setup-screen').style.display='none';
             document.getElementById('game-screen').style.display='block';
             vida=100; tentativas=0; acertos=0; erros=0; ativo=true; inicioGame = Date.now();
             if(curLvl === 'blitz') {
                 document.getElementById('life-container').style.display = 'none';
                 tempo = 60;
-                crono = setInterval(() => { 
-                    tempo--; 
-                    document.getElementById('time-txt').innerText = tempo+"s"; 
-                    if(tempo <= 0) fim(); 
-                }, 1000);
+                crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) fim(); }, 1000);
             }
             rodada();
         }
 
         function rodada() {
             if(!ativo) return;
-            let r1 = Math.floor(Math.random()*8)+2; 
-            let r2 = Math.floor(Math.random()*8)+2; 
-            res = r1 * r2;
+            let r1 = Math.floor(Math.random()*8)+2; let r2 = Math.floor(Math.random()*8)+2; res = r1 * r2;
             document.getElementById('q-box').innerText = r1 + " × " + r2;
-            document.getElementById('ans').value = ""; 
-            document.getElementById('ans').focus();
+            document.getElementById('ans').value = ""; document.getElementById('ans').focus();
             if(curLvl !== 'blitz') startTimer();
         }
 
         function startTimer() {
-            clearInterval(crono); 
-            tempo = conf[curLvl].t;
+            clearInterval(crono); tempo = conf[curLvl].t;
             document.getElementById('time-txt').innerText = tempo+"s";
             crono = setInterval(() => {
                 tempo--; document.getElementById('time-txt').innerText = tempo+"s";
-                if(tempo <= 0) { 
-                    tentativas++; erros++; vida -= conf[curLvl].d; 
-                    updateLife(); 
-                    if(vida <= 0 || tentativas >= 20) fim(); else rodada(); 
-                }
+                if(tempo <= 0) { tentativas++; erros++; vida -= conf[curLvl].d; playSound('miss'); updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); }
             }, 1000);
         }
 
         function check() {
-            let v = parseInt(document.getElementById('ans').value); 
-            if(isNaN(v)) return;
+            let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
             tentativas++;
             if(v === res) {
-                acertos++;
+                acertos++; playSound('hit');
                 if(curLvl !== 'blitz') vida = Math.min(100, vida+5);
             } else {
-                erros++;
-                if(curLvl !== 'blitz') vida -= conf[curLvl].d;
-                else tempo = Math.max(0, tempo-2);
+                erros++; playSound('miss');
+                if(curLvl !== 'blitz') vida -= conf[curLvl].d; else tempo = Math.max(0, tempo-2);
             }
-            if(curLvl !== 'blitz') {
-                updateLife(); 
-                if(vida <= 0 || tentativas >= 20) fim(); else rodada();
-            } else {
-                rodada();
-            }
+            if(curLvl !== 'blitz') { updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); } else rodada();
         }
 
         function updateLife() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
@@ -277,20 +285,15 @@
             ativo = false; clearInterval(crono);
             let tFinal = ((Date.now() - inicioGame) / 1000).toFixed(1);
             let efic = ((acertos / tentativas) * 100 || 0).toFixed(1);
-            
             document.getElementById('game-over').style.display = 'flex';
             document.getElementById('go-icon').innerText = (vida > 0 || curLvl === 'blitz') ? "🏆" : "💀";
-            document.getElementById('go-title').innerText = (vida > 0 || curLvl === 'blitz') ? "MISSÃO CUMPRIDA!" : "DERROTA!";
-            document.getElementById('go-stats').innerHTML = `
-                <b>Eficiência:</b> ${efic}%<br>
-                <b>Acertos:</b> ${acertos} | <b>Erros:</b> ${erros}<br>
-                <b>Tempo Total:</b> ${tFinal}s
-            `;
+            document.getElementById('go-title').innerText = (vida > 0 || curLvl === 'blitz') ? "FIM DA BATALHA!" : "VOCÊ CAIU!";
+            document.getElementById('go-stats').innerHTML = `Eficiência: ${efic}%<br>Acertos: ${acertos} | Erros: ${erros}<br>Tempo: ${tFinal}s`;
 
             if(curLvl === 2 || curLvl === 'blitz') {
                 salvarRanking(nome, efic, acertos, erros, tFinal);
                 if(efic >= 75 && curLvl === 2) {
-                    confetti();
+                    confetti(); playSound('win');
                     setTimeout(() => {
                         document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
                         document.getElementById('cert-efic').innerText = efic;
@@ -298,7 +301,6 @@
                     }, 1500);
                 }
             }
-            // Avança nível se não for blitz e tiver vencido
             if(vida > 0 && curLvl !== 'blitz' && curLvl < 2) {
                 let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
                 if(curLvl >= p) localStorage.setItem('prog_'+nome, curLvl+1);
@@ -315,11 +317,8 @@
         function verRanking() {
             let r = JSON.parse(localStorage.getItem('rank_global')) || [];
             document.getElementById('ranking-list').innerHTML = r.map((x, i) => `
-                <div class="rank-item">
-                    ${i+1}º <b>${x.nome}</b> - ${x.efic}% Eficiência<br>
-                    <small>✅ ${x.acertos} acertos em ${x.tempo}s (${x.data})</small>
-                </div>
-            `).join('') || "Ainda não há recordes. Seja o primeiro!";
+                <div class="rank-item">${i+1}º <b>${x.nome}</b> - ${x.efic}%<br><small>✅ ${x.acertos} acertos em ${x.tempo}s</small></div>
+            `).join('') || "Sem recordes.";
             document.getElementById('ranking-box').style.display = 'block';
         }
 
