@@ -16,14 +16,6 @@
 
         .theme-toggle { position: fixed; top: 15px; right: 15px; background: var(--accent); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; z-index: 1000; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
-        /* BANNERS */
-        .banner-wrapper { width: 100%; max-width: 800px; margin-bottom: 20px; background: #16213e; border-radius: 20px; border: 2px solid #444; overflow: hidden; position: relative; height: 100px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .slide { position: absolute; inset: 0; display: flex; align-items: center; padding: 10px 15px; opacity: 0; transition: opacity 0.8s; }
-        .slide.active { opacity: 1; z-index: 5; }
-        .slide img { height: 70px; width: 70px; object-fit: cover; border-radius: 12px; margin-right: 15px; border: 2px solid var(--gold); }
-        .slide-title { color: var(--gold); font-weight: 800; margin: 0; font-size: 1rem; }
-        .slide-text { font-size: 0.8rem; color: #ccc; margin: 2px 0; }
-
         /* JOGO */
         .card { background: var(--card-bg); color: var(--text); padding: 25px; border-radius: 30px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; width: 100%; max-width: 500px; }
         .avatar-grid { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
@@ -34,25 +26,10 @@
         #ans { width: 100%; max-width: 180px; font-size: 2.5rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; outline: none; background: #fdfdfd; color: var(--dark); }
         .btn-main { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
         
-        .lvl-btn { padding: 10px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 600; background: white; }
+        .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 700; background: white; display: flex; justify-content: space-between; align-items: center; }
+        
         #ranking-box, #cert-box { display: none; position: absolute; inset: 0; background: white; z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333; }
-        .rank-sponsor { background: #fff8e1; border: 1px dashed var(--gold); padding: 10px; border-radius: 10px; font-size: 0.8rem; margin-bottom: 15px; text-align: center; }
-
-        /* DEPOIMENTOS E BLOG */
-        .section-container { width: 100%; max-width: 800px; margin-top: 40px; text-align: center; }
-        .testi-card { background: #16213e; padding: 20px; border-radius: 20px; border-left: 5px solid var(--gold); text-align: left; margin-bottom: 15px; }
-        body.light-mode .testi-card { background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .testi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .testi-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
-        .testi-name { font-weight: bold; color: var(--gold); font-size: 0.9rem; }
-        .testi-text { font-size: 0.85rem; font-style: italic; color: #eee; line-height: 1.4; }
-        body.light-mode .testi-text { color: #444; }
-
-        .blog-card { background: #16213e; padding: 25px; border-radius: 20px; border-top: 5px solid var(--accent); margin-top: 20px; text-align: left; }
-        body.light-mode .blog-card { background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-
-        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 95%; max-width: 450px; box-shadow: 0 0 100px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
-        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
+        .rank-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.9rem; }
 
         footer { margin-top: 40px; text-align: center; font-size: 0.8rem; opacity: 0.7; color: var(--footer-text); padding-bottom: 30px; }
     </style>
@@ -61,20 +38,17 @@
 
     <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
 
-    <div class="banner-wrapper" id="banner-area"></div>
-
     <div id="setup-screen" class="card">
         <div id="ranking-box">
-            <div id="rank-sponsor-area" class="rank-sponsor"></div>
-            <h2 style="color:var(--primary)">🏆 RANKING GLOBAL</h2>
+            <h2 style="color:var(--primary)">🏆 RANKING GERAL</h2>
             <div id="ranking-list"></div>
             <button class="btn-main" onclick="document.getElementById('ranking-box').style.display='none'" style="background:#888">VOLTAR</button>
         </div>
 
-        <strong style="color:var(--accent)">👨‍🏫 Professor Hilário</strong>
+        <strong style="color:var(--accent)">👨‍🏫 Professor</strong>
         <h2 style="margin: 5px 0;">⚔️ BATALHA DA TABUADA</h2>
         
-        <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:12px; border-radius:12px; border:2px solid #ddd; text-align: center;" oninput="validarNome()">
+        <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:12px; border-radius:12px; border:2px solid #ddd; text-align: center; margin-bottom: 10px;" oninput="validarProgresso()">
         
         <div class="avatar-grid">
             <div class="avatar-option selected" onclick="selAvatar(this, '⚔️')">⚔️</div>
@@ -83,46 +57,38 @@
             <div class="avatar-option" onclick="selAvatar(this, '🤖')">🤖</div>
         </div>
 
-        <div style="margin: 10px 0; font-size: 0.9rem; color: #666;">
-            <label><input type="checkbox" id="narration-mode"> 🔊 Ativar Modo Narrador (Inclusão)</label>
+        <div style="margin: 10px 0; font-size: 0.85rem; color: #666;">
+            <label><input type="checkbox" id="narration-mode"> 🔊 Modo Narrador (Acessibilidade)</label>
         </div>
 
         <div id="lvls">
-            <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)">🛡️ Nível 1</div>
-            <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)">⚔️ Nível 2 <span id="l1">🔒</span></div>
-            <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)">🐉 Nível 3 <span id="l2">🔒</span></div>
-            <div class="lvl-btn" id="btn-blitz" style="color:var(--accent)" onclick="selecionarNivel('blitz')">⚡ MODO BLITZ</div>
+            <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)"><span>🛡️ Nível 1</span> <span class="lock">🔓</span></div>
+            <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)"><span>⚔️ Nível 2</span> <span class="lock" id="l1">🔒</span></div>
+            <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)"><span>🐉 Nível 3</span> <span class="lock" id="l2">🔒</span></div>
+            <div class="lvl-btn" id="btn-blitz" style="border-color:var(--accent); color:var(--accent)" onclick="selecionarNivel('blitz')"><span>⚡ MODO BLITZ</span> <span>🔓</span></div>
         </div>
 
-        <button class="btn-main" onclick="tentarIniciar()">ENTRAR NA ARENA</button>
-        <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 RANKING</button>
+        <button class="btn-main" onclick="tentarIniciar()">INICIAR BATALHA</button>
+        <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 VER RANKING</button>
     </div>
 
     <div id="game-screen" class="card" style="display:none;">
         <div id="cert-box">
             <div style="border: 8px double var(--gold); padding: 15px; background: #fffcf0;">
-                <h2>MESTRE DA TABUADA</h2>
-                <div id="cert-avatar" style="font-size: 3rem;"></div>
-                <h1 id="cert-nome-txt"></h1>
-                <p>Eficiência: <span id="cert-efic"></span>%</p>
+                <h2 style="margin:0">MESTRE DA TABUADA</h2>
+                <div id="cert-avatar" style="font-size: 3rem; margin:10px 0"></div>
+                <h1 id="cert-nome-txt" style="font-size:1.5rem; margin:10px 0"></h1>
+                <p>Você provou sua honra no campo da Matemática!</p>
             </div>
             <button class="btn-main" onclick="location.reload()">SAIR</button>
         </div>
 
-        <div id="game-over" style="display:none; position:absolute; inset:0; background:white; z-index:10; flex-direction:column; justify-content:center; align-items:center; border-radius:30px; padding:20px;">
-            <div id="go-avatar" style="font-size:3rem"></div>
-            <h1 id="go-title" style="margin:10px 0"></h1>
-            <p id="go-stats" style="font-weight:bold; color:#333"></p>
-            <button class="btn-main" onclick="location.reload()">MENU</button>
-        </div>
-        
         <div id="shield-status" style="position: absolute; top: 10px; left: 10px; font-size: 1.5rem; display: none;">🛡️</div>
-        <div id="combo-tag" style="color: var(--gold); font-weight: 800; display: none;">COMBO!</div>
         
         <div id="life-container" style="width:100%; background:#eee; height:12px; border-radius:10px; overflow:hidden; margin-bottom:10px;">
             <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
         </div>
-        <div style="display:flex; justify-content: space-between;">
+        <div style="display:flex; justify-content: space-between; align-items: center;">
             <span id="player-tag" style="font-size:1.5rem"></span>
             <h2 id="time-txt" style="color:var(--primary); margin:0">--</h2>
         </div>
@@ -131,173 +97,128 @@
         <button class="btn-main" onclick="check()">ATACAR!</button>
     </div>
 
-    <div class="section-container">
-        <div class="blog-card">
-            <h3 style="color:var(--accent); margin-top:0">Pedagogia por trás do Jogo 📖</h3>
-            <p style="font-size: 0.9rem; line-height: 1.5; color: #ccc;" id="pedagogy-text">
-                A "Batalha da Tabuada" utiliza o conceito de <strong>Gamificação e Repetição Espaçada</strong>. O cérebro humano retém informações com mais facilidade quando há um estímulo emocional e feedback imediato. O <strong>Modo Narrador</strong> garante a inclusão de alunos com dificuldades visuais ou em alfabetização.
-            </p>
-        </div>
-        <h3 style="color: var(--gold)">Mural de Conquistas 💬</h3>
-        <div id="testi-area" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;"></div>
-    </div>
-
-    <footer onclick="abrirAdmin()">© 2026 Hilário Schwanz | <span id="visits">Acessos: Online</span></footer>
-
-    <div id="admin-panel">
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <button onclick="switchTab('ads')" style="flex:1">Banners</button>
-            <button onclick="switchTab('testi')" style="flex:1">Mural</button>
-            <button onclick="switchTab('sponsor')" style="flex:1">Ranking</button>
-        </div>
-        <div id="tab-ads">
-            <select id="edit-select" onchange="carregarCampos()" class="admin-input"><option value="ad1">Slot 1</option><option value="ad2">Slot 2</option><option value="ad3">Slot 3</option></select>
-            <input type="text" id="edit-text" placeholder="Título" class="admin-input">
-            <input type="text" id="edit-sub" placeholder="Subtítulo" class="admin-input">
-            <input type="text" id="edit-url" placeholder="URL Imagem" class="admin-input">
-            <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
-        </div>
-        <div id="tab-testi" style="display:none">
-            <select id="edit-testi-sel" onchange="carregarTestiCampos()" class="admin-input"><option value="t1">Mural 1</option><option value="t2">Mural 2</option><option value="t3">Mural 3</option></select>
-            <input type="text" id="t-name" placeholder="Nome do Aluno/Pai" class="admin-input">
-            <input type="text" id="t-img" placeholder="Foto URL" class="admin-input">
-            <textarea id="t-text" placeholder="Depoimento" class="admin-input"></textarea>
-        </div>
-        <div id="tab-sponsor" style="display:none">
-            <input type="text" id="s-master" placeholder="Empresa Patrocinadora do Ranking" class="admin-input">
-        </div>
-        <button class="btn-main" onclick="salvarGeral()">SALVAR TUDO</button>
-        <button class="btn-main" style="background:#888" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
-    </div>
+    <footer>© 2026 Hilário Schwanz</footer>
 
     <script>
         const synth = window.speechSynthesis;
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let currentSlide = 0, avatarSel = "⚔️", activeTab = 'ads', narrar = false, combo = 0, shield = false;
+        let avatarSel = "⚔️", narrar = false, combo = 0, shield = false;
+        let nvlConfig = [
+            { min: 2, max: 5, tempo: 10, dano: 20, nome: "Nível 1" },
+            { min: 2, max: 9, tempo: 8, dano: 25, nome: "Nível 2" },
+            { min: 6, max: 12, tempo: 6, dano: 34, nome: "Nível 3" },
+            { min: 2, max: 10, tempo: 60, dano: 0, nome: "Blitz" }
+        ];
+        let curLvl = 0, ativo = false, vida = 100, acertos = 0, tentativas = 0, res, crono, tempoRestante;
 
-        function falar(texto) { if (!narrar) return; synth.cancel(); const msg = new SpeechSynthesisUtterance(texto); msg.lang = 'pt-BR'; msg.rate = 1.1; synth.speak(msg); }
-        function toggleTheme() { const isLight = document.body.classList.toggle('light-mode'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); document.getElementById('theme-btn').innerText = isLight ? '☀️' : '🌙'; }
+        function falar(t) { if(narrar) { synth.cancel(); const m = new SpeechSynthesisUtterance(t); m.lang='pt-BR'; synth.speak(m); } }
+        function toggleTheme() { const isL = document.body.classList.toggle('light-mode'); localStorage.setItem('theme', isL?'light':'dark'); }
 
-        // BANNERS E MURAL
-        function renderBanner() {
-            const container = document.getElementById('banner-area');
-            let html = '', hasAds = false;
-            ['ad1','ad2','ad3'].forEach((id, index) => {
-                const data = JSON.parse(localStorage.getItem('sp_' + id));
-                if(data && data.text) { hasAds = true; html += `<div class="slide ${index === 0 ? 'active' : ''}" onclick="window.open('${data.dest}', '_blank')"><img src="${data.url}"><div class="slide-info"><p class="slide-title">${data.text}</p><p class="slide-text">${data.sub}</p></div></div>`; }
-            });
-            container.innerHTML = hasAds ? html : `<div class="slide active"><p style="color:#666">Espaço para Patrocinadores</p></div>`;
-            if(hasAds) setInterval(() => { const s = document.querySelectorAll('.slide'); if(s.length > 1) { s[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % s.length; s[currentSlide].classList.add('active'); } }, 5000);
+        function validarProgresso() {
+            const nome = document.getElementById('nome-aluno').value.trim();
+            const prog = parseInt(localStorage.getItem('prog_'+nome)) || 0;
+            document.getElementById('l1').innerText = prog >= 1 ? "🔓" : "🔒";
+            document.getElementById('l2').innerText = prog >= 2 ? "🔓" : "🔒";
         }
 
-        function renderTestimonials() {
-            const container = document.getElementById('testi-area');
-            let html = '';
-            ['t1','t2','t3'].forEach(id => {
-                const data = JSON.parse(localStorage.getItem('testi_' + id));
-                if(data && data.name) html += `<div class="testi-card"><div class="testi-header"><img src="${data.img || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="testi-img"><div class="testi-name">${data.name}</div></div><div class="testi-text">"${data.text}"</div></div>`;
-            });
-            container.innerHTML = html;
+        function selecionarNivel(l) {
+            const nome = document.getElementById('nome-aluno').value.trim();
+            if(!nome) return alert("Digite seu nome!");
+            const prog = parseInt(localStorage.getItem('prog_'+nome)) || 0;
+            if(l !== 'blitz' && l > prog) return alert("Vença o nível anterior!");
+            curLvl = l;
+            document.querySelectorAll('.lvl-btn').forEach(b => b.style.background = "white");
+            document.getElementById(l === 'blitz' ? 'btn-blitz' : 'btn-'+l).style.background = "#eee";
         }
 
-        // ADMIN
-        function switchTab(t) { activeTab = t; document.getElementById('tab-ads').style.display = t === 'ads' ? 'block' : 'none'; document.getElementById('tab-testi').style.display = t === 'testi' ? 'block' : 'none'; document.getElementById('tab-sponsor').style.display = t === 'sponsor' ? 'block' : 'none'; }
-        function abrirAdmin() { if(prompt("Senha:") === "Food2024@") { document.getElementById('admin-panel').style.display='block'; carregarCampos(); carregarTestiCampos(); } }
-        function salvarGeral() {
-            if(activeTab === 'ads') { const id = document.getElementById('edit-select').value; localStorage.setItem('sp_'+id, JSON.stringify({ text: document.getElementById('edit-text').value, sub: document.getElementById('edit-sub').value, url: document.getElementById('edit-url').value, dest: document.getElementById('edit-dest').value })); }
-            else if(activeTab === 'testi') { const id = document.getElementById('edit-testi-sel').value; localStorage.setItem('testi_'+id, JSON.stringify({ name: document.getElementById('t-name').value, img: document.getElementById('t-img').value, text: document.getElementById('t-text').value })); }
-            else { localStorage.setItem('rank_master', document.getElementById('s-master').value); }
-            alert("Salvo!"); location.reload();
-        }
-        function carregarCampos() { const data = JSON.parse(localStorage.getItem('sp_'+document.getElementById('edit-select').value)) || {text:"", sub:"", url:"", dest:""}; document.getElementById('edit-text').value = data.text; document.getElementById('edit-sub').value = data.sub; document.getElementById('edit-url').value = data.url; document.getElementById('edit-dest').value = data.dest; }
-        function carregarTestiCampos() { const data = JSON.parse(localStorage.getItem('testi_'+document.getElementById('edit-testi-sel').value)) || {name:"", img:"", text:""}; document.getElementById('t-name').value = data.name; document.getElementById('t-img').value = data.img; document.getElementById('t-text').value = data.text; }
-
-        // JOGO
-        let conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}], curLvl = 0, nome = "", vida = 100, acertos = 0, tentativas = 0, ativo = false, res, crono, tempo, inicioGame;
-        function selAvatar(el, icon) { document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected')); el.classList.add('selected'); avatarSel = icon; }
-        function validarNome() { nome = document.getElementById('nome-aluno').value.trim(); let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; document.getElementById('l1').innerText = p >= 1 ? "🔓" : "🔒"; document.getElementById('l2').innerText = p >= 2 ? "🔓" : "🔒"; }
-        function selecionarNivel(l) { if(!nome) return alert("Nome?"); let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; if(l === 'blitz' || l <= p) { curLvl = l; document.querySelectorAll('.lvl-btn').forEach(b => b.style.background = "white"); let sel = (l === 'blitz') ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l); sel.style.background = "#eee"; if (audioCtx.state === 'suspended') audioCtx.resume(); } }
-        
         function tentarIniciar() {
-            if(nome.length < 3) return;
+            if(document.getElementById('nome-aluno').value.length < 3) return;
             narrar = document.getElementById('narration-mode').checked;
             document.getElementById('setup-screen').style.display='none';
             document.getElementById('game-screen').style.display='block';
             document.getElementById('player-tag').innerText = avatarSel;
-            vida=100; acertos=0; tentativas=0; ativo=true; combo=0; shield=false; inicioGame = Date.now();
-            falar("A batalha começou! Boa sorte!");
-            if(curLvl === 'blitz') { tempo = 60; crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) fim(); }, 1000); }
-            rodada();
+            vida=100; acertos=0; tentativas=0; ativo=true;
+            if(curLvl === 'blitz') {
+                tempoRestante = 60;
+                crono = setInterval(() => { tempoRestante--; document.getElementById('time-txt').innerText = tempoRestante+"s"; if(tempoRestante <= 0) finalizar(); }, 1000);
+            }
+            rodarQuestao();
         }
 
-        function rodada() {
+        function rodarQuestao() {
             if(!ativo) return;
-            let r1 = Math.floor(Math.random()*8)+2, r2 = Math.floor(Math.random()*8)+2;
+            const config = curLvl === 'blitz' ? nvlConfig[3] : nvlConfig[curLvl];
+            let r1 = Math.floor(Math.random()*(config.max - config.min + 1)) + config.min;
+            let r2 = Math.floor(Math.random()*8) + 2;
             res = r1 * r2;
-            document.getElementById('q-box').innerText = r1 + " × " + r2;
+            document.getElementById('q-box').innerText = `${r1} × ${r2}`;
             document.getElementById('ans').value = ""; document.getElementById('ans').focus();
             falar(`Quanto é ${r1} vezes ${r2}?`);
-            if(curLvl !== 'blitz') startTimer();
+            if(curLvl !== 'blitz') iniciarTimer(config.tempo);
         }
 
-        function startTimer() {
-            clearInterval(crono); tempo = conf[curLvl].t; document.getElementById('time-txt').innerText = tempo+"s";
-            crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) { acertos--; vida -= conf[curLvl].d; updateLife(); if(vida <= 0) fim(); else rodada(); } }, 1000);
+        function iniciarTimer(t) {
+            clearInterval(crono); tempoRestante = t;
+            document.getElementById('time-txt').innerText = tempoRestante+"s";
+            crono = setInterval(() => {
+                tempoRestante--; document.getElementById('time-txt').innerText = tempoRestante+"s";
+                if(tempoRestante <= 0) { vida -= nvlConfig[curLvl].d; atualizarVida(); if(vida <= 0) finalizar(); else rodarQuestao(); }
+            }, 1000);
         }
 
         function check() {
-            let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
+            const v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
             tentativas++;
-            if(v === res) {
-                acertos++; combo++;
-                if(combo >= 3) document.getElementById('combo-tag').style.display = 'inline';
-                if(combo === 5) { shield = true; document.getElementById('shield-status').style.display = 'block'; falar("Escudo ativado!"); }
-                falar("Correto!");
-                if(curLvl !== 'blitz') vida = Math.min(100, vida+5);
-            } else {
-                combo = 0; document.getElementById('combo-tag').style.display = 'none';
-                if(shield) { shield = false; document.getElementById('shield-status').style.display = 'none'; falar("O escudo te protegeu!"); }
-                else { vida -= (curLvl === 'blitz' ? 0 : conf[curLvl].d); falar("Humm, esta você errou."); }
-            }
-            if(curLvl !== 'blitz') { updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); } else rodada();
+            if(v === res) { acertos++; falar("Correto!"); }
+            else { if(curLvl !== 'blitz') vida -= nvlConfig[curLvl].d; falar("Humm, errou."); }
+            atualizarVida();
+            if(vida <= 0 || (curLvl !== 'blitz' && tentativas >= 20)) finalizar(); else rodarQuestao();
         }
 
-        function updateLife() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
+        function atualizarVida() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
 
-        function fim() {
+        function finalizar() {
             ativo = false; clearInterval(crono);
-            let efic = ((acertos / tentativas) * 100 || 0).toFixed(1);
-            document.getElementById('game-over').style.display = 'flex';
-            document.getElementById('go-avatar').innerText = avatarSel;
-            document.getElementById('go-title').innerText = (vida > 0) ? "VITÓRIA!" : "DERROTA!";
-            if(efic >= 75 && curLvl === 2) { 
-                confetti(); 
-                document.getElementById('cert-avatar').innerText = avatarSel;
-                document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
-                document.getElementById('cert-box').style.display = 'block'; 
+            const nomeAlu = document.getElementById('nome-aluno').value.trim();
+            const efic = Math.round((acertos / tentativas) * 100) || 0;
+            const lvlTxt = curLvl === 'blitz' ? "Blitz" : "Nível " + (curLvl + 1);
+
+            salvarNoRanking(nomeAlu, avatarSel, efic, lvlTxt);
+
+            if(vida > 0 && curLvl !== 'blitz') {
+                const prog = parseInt(localStorage.getItem('prog_'+nomeAlu)) || 0;
+                if(curLvl >= prog) localStorage.setItem('prog_'+nomeAlu, curLvl + 1);
+                if(curLvl === 2 && efic >= 75) {
+                    confetti();
+                    document.getElementById('cert-avatar').innerText = avatarSel;
+                    document.getElementById('cert-nome-txt').innerText = nomeAlu.toUpperCase();
+                    document.getElementById('cert-box').style.display = 'block';
+                    return;
+                }
             }
-            salvarRanking(nome, avatarSel, efic);
+            alert(`Fim de jogo! ${efic}% de acerto no ${lvlTxt}`);
+            location.reload();
         }
 
-        function salvarRanking(n, av, ef) {
-            let r = JSON.parse(localStorage.getItem('rank_global')) || [];
-            r.push({nome: n, avatar: av, efic: ef});
-            r.sort((a,b) => b.efic - a.efic);
-            localStorage.setItem('rank_global', JSON.stringify(r.slice(0, 10)));
+        function salvarNoRanking(n, av, ef, lv) {
+            let rank = JSON.parse(localStorage.getItem('rank_tabuada')) || [];
+            rank.push({ nome: n, avatar: av, efic: ef, lvl: lv });
+            // Ordena por Nível (Nível 3 > Nível 2 > Nível 1) e depois por %
+            rank.sort((a, b) => b.lvl.localeCompare(a.lvl) || b.efic - a.efic);
+            localStorage.setItem('rank_tabuada', JSON.stringify(rank.slice(0, 10)));
         }
 
         function verRanking() {
-            let r = JSON.parse(localStorage.getItem('rank_global')) || [];
-            document.getElementById('rank-sponsor-area').innerText = "Patrocinador Master: " + (localStorage.getItem('rank_master') || "Disponível");
-            document.getElementById('ranking-list').innerHTML = r.map((x, i) => `<div>${i+1}º ${x.avatar} ${x.nome} - ${x.efic}%</div>`).join('');
-            document.getElementById('ranking-box').style.display = 'block';
+            const rank = JSON.parse(localStorage.getItem('rank_tabuada')) || [];
+            document.getElementById('ranking-list').innerHTML = rank.map(item => `
+                <div class="rank-item">
+                    <span>${item.avatar} <b>${item.nome}</b></span>
+                    <span>${item.efic}% (${item.lvl})</span>
+                </div>
+            `).join('') || "Sem recordes ainda!";
+            document.getElementById('ranking-box').style.display='block';
         }
 
-        window.onload = () => {
-            if(localStorage.getItem('theme') === 'light') toggleTheme();
-            renderBanner(); renderTestimonials();
-            document.getElementById('s-master').value = localStorage.getItem('rank_master') || "";
-        };
+        window.onload = () => { if(localStorage.getItem('theme') === 'light') toggleTheme(); };
         document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
 </body>
