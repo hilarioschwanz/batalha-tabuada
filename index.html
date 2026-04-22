@@ -22,7 +22,6 @@
         .slide.active { opacity: 1; z-index: 5; }
         .slide img { height: 70px; width: 70px; object-fit: cover; border-radius: 12px; margin-right: 15px; border: 2px solid var(--gold); }
         .slide-title { color: var(--gold); font-weight: 800; margin: 0; font-size: 1rem; }
-        .slide-text { font-size: 0.8rem; color: #ccc; margin: 2px 0; }
 
         /* JOGO */
         .card { background: var(--card-bg); color: var(--text); padding: 25px; border-radius: 30px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; width: 100%; max-width: 500px; }
@@ -34,25 +33,16 @@
         #ans { width: 100%; max-width: 180px; font-size: 2.5rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; outline: none; background: #fdfdfd; color: var(--dark); }
         .btn-main { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
         
-        .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 700; background: white; display: flex; justify-content: space-between; align-items: center; }
+        .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 700; background: white; display: flex; justify-content: space-between; }
         
         #ranking-box, #cert-box { display: none; position: absolute; inset: 0; background: white; z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333; }
-        .rank-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .rank-item { padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.9rem; }
 
-        /* MURAL E BLOG */
         .section-container { width: 100%; max-width: 800px; margin-top: 40px; text-align: center; }
         .testi-card { background: #16213e; padding: 20px; border-radius: 20px; border-left: 5px solid var(--gold); text-align: left; margin-bottom: 15px; }
         body.light-mode .testi-card { background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .testi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .testi-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
-        .testi-name { font-weight: bold; color: var(--gold); font-size: 0.9rem; }
-        .testi-text { font-size: 0.85rem; font-style: italic; color: #eee; line-height: 1.4; }
-        body.light-mode .testi-text { color: #444; }
 
-        .blog-card { background: #16213e; padding: 25px; border-radius: 20px; border-top: 5px solid var(--accent); margin-top: 20px; text-align: left; }
-        body.light-mode .blog-card { background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-
-        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 95%; max-width: 450px; box-shadow: 0 0 100px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 95%; max-width: 450px; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
         .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
 
         footer { margin-top: 40px; text-align: center; font-size: 0.8rem; opacity: 0.7; color: var(--footer-text); padding-bottom: 30px; cursor: pointer; }
@@ -61,20 +51,19 @@
 <body>
 
     <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
-
     <div class="banner-wrapper" id="banner-area"></div>
 
     <div id="setup-screen" class="card">
         <div id="ranking-box">
-            <h2 style="color:var(--primary)">🏆 RANKING GERAL</h2>
-            <div id="ranking-list" style="text-align: left; margin-bottom: 20px;"></div>
+            <h2 style="color:var(--primary)">🏆 RANKING</h2>
+            <div id="ranking-list"></div>
             <button class="btn-main" onclick="document.getElementById('ranking-box').style.display='none'" style="background:#888">VOLTAR</button>
         </div>
 
         <strong style="color:var(--accent)">👨‍🏫 Professor Hilário</strong>
         <h2 style="margin: 5px 0;">⚔️ BATALHA DA TABUADA</h2>
         
-        <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:12px; border-radius:12px; border:2px solid #ddd; text-align: center; margin-bottom: 10px;" oninput="validarProgresso()">
+        <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:12px; border-radius:12px; border:2px solid #ddd; text-align: center;" oninput="validarProgresso()">
         
         <div class="avatar-grid">
             <div class="avatar-option selected" onclick="selAvatar(this, '⚔️')">⚔️</div>
@@ -83,18 +72,18 @@
             <div class="avatar-option" onclick="selAvatar(this, '🤖')">🤖</div>
         </div>
 
-        <div style="margin: 10px 0; font-size: 0.85rem; color: #666;">
+        <div style="margin: 10px 0; font-size: 0.8rem; color: #666;">
             <label><input type="checkbox" id="narration-mode"> 🔊 Modo Narrador (Inclusão)</label>
         </div>
 
         <div id="lvls">
-            <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)"><span>🛡️ Nível 1 (2-5)</span> <span class="lock">🔓</span></div>
-            <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)"><span>⚔️ Nível 2 (2-9)</span> <span class="lock" id="l1">🔒</span></div>
-            <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)"><span>🐉 Nível 3 (6-12)</span> <span class="lock" id="l2">🔒</span></div>
-            <div class="lvl-btn" id="btn-blitz" style="border-color:var(--accent); color:var(--accent)" onclick="selecionarNivel('blitz')"><span>⚡ MODO BLITZ</span> <span>🔓</span></div>
+            <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)"><span>🛡️ Nível 1</span> <span class="lock">🔓</span></div>
+            <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)"><span>⚔️ Nível 2</span> <span class="lock" id="l1">🔒</span></div>
+            <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)"><span>🐉 Nível 3</span> <span class="lock" id="l2">🔒</span></div>
+            <div class="lvl-btn" id="btn-blitz" style="color:var(--accent)" onclick="selecionarNivel('blitz')"><span>⚡ MODO BLITZ</span> <span>🔓</span></div>
         </div>
 
-        <button class="btn-main" onclick="tentarIniciar()">ENTRAR NA ARENA</button>
+        <button class="btn-main" onclick="tentarIniciar()">JOGAR</button>
         <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 RANKING</button>
     </div>
 
@@ -104,15 +93,15 @@
                 <h2>MESTRE DA TABUADA</h2>
                 <div id="cert-avatar" style="font-size: 3rem;"></div>
                 <h1 id="cert-nome-txt"></h1>
-                <p>Conquistou a vitória máxima!</p>
+                <p>Nível 3 Concluído com Honra!</p>
             </div>
-            <button class="btn-main" onclick="location.reload()">CONCLUIR</button>
+            <button class="btn-main" onclick="location.reload()">SAIR</button>
         </div>
 
         <div id="life-container" style="width:100%; background:#eee; height:12px; border-radius:10px; overflow:hidden; margin-bottom:10px;">
             <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
         </div>
-        <div style="display:flex; justify-content: space-between; align-items: center;">
+        <div style="display:flex; justify-content: space-between;">
             <span id="player-tag" style="font-size:1.5rem"></span>
             <h2 id="time-txt" style="color:var(--primary); margin:0">--</h2>
         </div>
@@ -123,91 +112,41 @@
 
     <div class="section-container">
         <div class="blog-card">
-            <h3 style="color:var(--accent); margin-top:0">Pedagogia por trás do Jogo 📖</h3>
-            <p style="font-size: 0.9rem; line-height: 1.5; color: #ccc;" id="pedagogy-text">
-                A "Batalha da Tabuada" utiliza o conceito de <strong>Gamificação e Repetição Espaçada</strong>. O cérebro humano retém informações com mais facilidade quando há estímulo emocional e feedback imediato. O modo narrador garante a inclusão para todos os alunos.
-            </p>
+            <h3 style="color:var(--accent); margin:0">Mural de Depoimentos</h3>
+            <div id="testi-area" style="margin-top:15px"></div>
         </div>
-        <h3 style="color: var(--gold)">Mural de Campeões 💬</h3>
-        <div id="testi-area" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;"></div>
     </div>
 
     <footer onclick="abrirAdmin()">© 2026 Hilário Schwanz | Painel Admin</footer>
 
     <div id="admin-panel">
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <button onclick="switchTab('ads')" style="flex:1">Banners</button>
-            <button onclick="switchTab('testi')" style="flex:1">Mural</button>
-        </div>
-        <div id="tab-ads">
-            <select id="edit-select" onchange="carregarCampos()" class="admin-input"><option value="ad1">Slot 1</option><option value="ad2">Slot 2</option><option value="ad3">Slot 3</option></select>
-            <input type="text" id="edit-text" placeholder="Título" class="admin-input">
-            <input type="text" id="edit-sub" placeholder="Subtítulo" class="admin-input">
-            <input type="text" id="edit-url" placeholder="URL Imagem" class="admin-input">
-            <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
-        </div>
-        <div id="tab-testi" style="display:none">
-            <select id="edit-testi-sel" onchange="carregarTestiCampos()" class="admin-input"><option value="t1">Mural 1</option><option value="t2">Mural 2</option><option value="t3">Mural 3</option></select>
-            <input type="text" id="t-name" placeholder="Nome" class="admin-input">
-            <input type="text" id="t-img" placeholder="URL Foto" class="admin-input">
-            <textarea id="t-text" placeholder="Depoimento" class="admin-input"></textarea>
-        </div>
-        <button class="btn-main" onclick="salvarGeral()">SALVAR</button>
+        <input type="text" id="edit-text" placeholder="Título Banner" class="admin-input">
+        <input type="text" id="edit-url" placeholder="URL Imagem Banner" class="admin-input">
+        <button class="btn-main" onclick="salvarAdmin()">SALVAR BANNER</button>
         <button class="btn-main" style="background:#888" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
     </div>
 
     <script>
         const synth = window.speechSynthesis;
-        let avatarSel = "⚔️", narrar = false, activeTab = 'ads', currentSlide = 0;
-        let nvlConfig = [
-            { min: 2, max: 5, tempo: 10, dano: 20, nome: "Nível 1" },
-            { min: 2, max: 9, tempo: 8, dano: 25, nome: "Nível 2" },
-            { min: 6, max: 12, tempo: 6, dano: 34, nome: "Nível 3" },
-            { min: 2, max: 10, tempo: 60, dano: 0, nome: "Blitz" }
+        let avatarSel = "⚔️", narrar = false, curLvl = 0, currentSlide = 0;
+        let ativo = false, vida = 100, acertos = 0, tentativas = 0, res, crono, tempo;
+
+        // LÓGICA DE NÍVEIS ORIGINAL (CONFIGURAÇÃO)
+        let conf = [
+            { t: 10, d: 20 }, // Nível 1
+            { t: 8, d: 30 },  // Nível 2
+            { t: 5, d: 40 },  // Nível 3
+            { t: 60, d: 0 }   // Blitz
         ];
-        let curLvl = 0, ativo = false, vida = 100, acertos = 0, tentativas = 0, res, crono, tempoRestante;
 
-        // SISTEMA DE VOZ
         function falar(t) { if(narrar) { synth.cancel(); const m = new SpeechSynthesisUtterance(t); m.lang='pt-BR'; synth.speak(m); } }
-        function toggleTheme() { const isL = document.body.classList.toggle('light-mode'); localStorage.setItem('theme', isL?'light':'dark'); }
+        function toggleTheme() { document.body.classList.toggle('light-mode'); }
 
-        // BANNERS E MURAL
         function renderBanner() {
-            const container = document.getElementById('banner-area');
-            let html = '', hasAds = false;
-            ['ad1','ad2','ad3'].forEach((id, idx) => {
-                const data = JSON.parse(localStorage.getItem('sp_' + id));
-                if(data && data.text) { 
-                    hasAds = true; 
-                    html += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="window.open('${data.dest}', '_blank')"><img src="${data.url}"><div class="slide-info"><p class="slide-title">${data.text}</p><p class="slide-text">${data.sub}</p></div></div>`; 
-                }
-            });
-            container.innerHTML = hasAds ? html : `<div class="slide active"><p style="color:#666">Anuncie aqui seu Comércio</p></div>`;
-            if(hasAds) setInterval(() => { const s = document.querySelectorAll('.slide'); if(s.length > 1) { s[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % s.length; s[currentSlide].classList.add('active'); } }, 5000);
+            const data = JSON.parse(localStorage.getItem('banner_data')) || { text: "Patrocine aqui", url: "" };
+            document.getElementById('banner-area').innerHTML = `<div class="slide active"><img src="${data.url || 'https://via.placeholder.com/70'}"><div class="slide-info"><p class="slide-title">${data.text}</p></div></div>`;
         }
 
-        function renderTestimonials() {
-            const container = document.getElementById('testi-area');
-            let html = '';
-            ['t1','t2','t3'].forEach(id => {
-                const data = JSON.parse(localStorage.getItem('testi_' + id));
-                if(data && data.name) html += `<div class="testi-card"><div class="testi-header"><img src="${data.img || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="testi-img"><div class="testi-name">${data.name}</div></div><div class="testi-text">"${data.text}"</div></div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        // ADMIN
-        function switchTab(t) { activeTab = t; document.getElementById('tab-ads').style.display = t === 'ads' ? 'block' : 'none'; document.getElementById('tab-testi').style.display = t === 'testi' ? 'block' : 'none'; }
-        function abrirAdmin() { if(prompt("Senha:") === "Food2024@") { document.getElementById('admin-panel').style.display='block'; carregarCampos(); carregarTestiCampos(); } }
-        function salvarGeral() {
-            if(activeTab === 'ads') { const id = document.getElementById('edit-select').value; localStorage.setItem('sp_'+id, JSON.stringify({ text: document.getElementById('edit-text').value, sub: document.getElementById('edit-sub').value, url: document.getElementById('edit-url').value, dest: document.getElementById('edit-dest').value })); }
-            else { const id = document.getElementById('edit-testi-sel').value; localStorage.setItem('testi_'+id, JSON.stringify({ name: document.getElementById('t-name').value, img: document.getElementById('t-img').value, text: document.getElementById('t-text').value })); }
-            alert("Salvo!"); location.reload();
-        }
-        function carregarCampos() { const data = JSON.parse(localStorage.getItem('sp_'+document.getElementById('edit-select').value)) || {text:"", sub:"", url:"", dest:""}; document.getElementById('edit-text').value = data.text; document.getElementById('edit-sub').value = data.sub; document.getElementById('edit-url').value = data.url; document.getElementById('edit-dest').value = data.dest; }
-        function carregarTestiCampos() { const data = JSON.parse(localStorage.getItem('testi_'+document.getElementById('edit-testi-sel').value)) || {name:"", img:"", text:""}; document.getElementById('t-name').value = data.name; document.getElementById('t-img').value = data.img; document.getElementById('t-text').value = data.text; }
-
-        // JOGO
         function validarProgresso() {
             const nome = document.getElementById('nome-aluno').value.trim();
             const prog = parseInt(localStorage.getItem('prog_'+nome)) || 0;
@@ -217,9 +156,9 @@
 
         function selecionarNivel(l) {
             const nome = document.getElementById('nome-aluno').value.trim();
-            if(!nome) return alert("Digite seu nome!");
+            if(!nome) return alert("Nome?");
             const prog = parseInt(localStorage.getItem('prog_'+nome)) || 0;
-            if(l !== 'blitz' && l > prog) return alert("Bloqueado!");
+            if(l !== 'blitz' && l > prog) return alert("Nível Bloqueado!");
             curLvl = l;
             document.querySelectorAll('.lvl-btn').forEach(b => b.style.background = "white");
             document.getElementById(l === 'blitz' ? 'btn-blitz' : 'btn-'+l).style.background = "#eee";
@@ -233,91 +172,85 @@
             document.getElementById('player-tag').innerText = avatarSel;
             vida=100; acertos=0; tentativas=0; ativo=true;
             if(curLvl === 'blitz') {
-                tempoRestante = 60;
-                crono = setInterval(() => { tempoRestante--; document.getElementById('time-txt').innerText = tempoRestante+"s"; if(tempoRestante <= 0) finalizar(); }, 1000);
+                tempo = 60; crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) finalizar(); }, 1000);
             }
-            rodarQuestao();
+            rodar();
         }
 
-        function rodarQuestao() {
+        function rodar() {
             if(!ativo) return;
-            const config = curLvl === 'blitz' ? nvlConfig[3] : nvlConfig[curLvl];
-            let r1 = Math.floor(Math.random()*(config.max - config.min + 1)) + config.min;
-            let r2 = Math.floor(Math.random()*8) + 2;
+            let r1 = Math.floor(Math.random()*8)+2, r2 = Math.floor(Math.random()*8)+2;
             res = r1 * r2;
-            document.getElementById('q-box').innerText = `${r1} × ${r2}`;
+            document.getElementById('q-box').innerText = r1 + " × " + r2;
             document.getElementById('ans').value = ""; document.getElementById('ans').focus();
-            falar(`Quanto é ${r1} vezes ${r2}?`);
-            if(curLvl !== 'blitz') iniciarTimer(config.tempo);
-        }
-
-        function iniciarTimer(t) {
-            clearInterval(crono); tempoRestante = t;
-            document.getElementById('time-txt').innerText = tempoRestante+"s";
-            crono = setInterval(() => {
-                tempoRestante--; document.getElementById('time-txt').innerText = tempoRestante+"s";
-                if(tempoRestante <= 0) { vida -= nvlConfig[curLvl].d; atualizarVida(); if(vida <= 0) finalizar(); else rodarQuestao(); }
-            }, 1000);
+            falar(`${r1} vezes ${r2}`);
+            if(curLvl !== 'blitz') {
+                clearInterval(crono); tempo = conf[curLvl].t;
+                document.getElementById('time-txt').innerText = tempo+"s";
+                crono = setInterval(() => {
+                    tempo--; document.getElementById('time-txt').innerText = tempo+"s";
+                    if(tempo <= 0) { vida -= conf[curLvl].d; atualizarVida(); if(vida <= 0) finalizar(); else rodar(); }
+                }, 1000);
+            }
         }
 
         function check() {
-            const v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
+            let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
             tentativas++;
-            if(v === res) { acertos++; falar("Correto!"); }
-            else { if(curLvl !== 'blitz') vida -= nvlConfig[curLvl].d; falar("Humm, errou."); }
+            if(v === res) { acertos++; falar("Certo"); }
+            else { if(curLvl !== 'blitz') vida -= conf[curLvl].d; falar("Errou"); }
             atualizarVida();
-            if(vida <= 0 || (curLvl !== 'blitz' && tentativas >= 20)) finalizar(); else rodarQuestao();
+            if(vida <= 0 || (curLvl !== 'blitz' && tentativas >= 20)) finalizar(); else rodar();
         }
 
         function atualizarVida() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
 
         function finalizar() {
             ativo = false; clearInterval(crono);
-            const nomeAlu = document.getElementById('nome-aluno').value.trim();
-            const efic = Math.round((acertos / tentativas) * 100) || 0;
-            const lvlTxt = curLvl === 'blitz' ? "Blitz" : "Nível " + (curLvl + 1);
+            const nome = document.getElementById('nome-aluno').value.trim();
+            const efic = Math.round((acertos/tentativas)*100) || 0;
+            const lvlTag = curLvl === 'blitz' ? "Blitz" : "Nível " + (curLvl + 1);
 
-            salvarNoRanking(nomeAlu, avatarSel, efic, lvlTxt);
+            salvarRanking(nome, avatarSel, efic, lvlTag);
 
             if(vida > 0 && curLvl !== 'blitz') {
-                const prog = parseInt(localStorage.getItem('prog_'+nomeAlu)) || 0;
-                if(curLvl >= prog) localStorage.setItem('prog_'+nomeAlu, curLvl + 1);
+                const prog = parseInt(localStorage.getItem('prog_'+nome)) || 0;
+                if(curLvl >= prog) localStorage.setItem('prog_'+nome, curLvl + 1);
                 if(curLvl === 2 && efic >= 75) {
                     confetti();
                     document.getElementById('cert-avatar').innerText = avatarSel;
-                    document.getElementById('cert-nome-txt').innerText = nomeAlu.toUpperCase();
+                    document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
                     document.getElementById('cert-box').style.display = 'block';
                     return;
                 }
             }
-            alert(`Fim! ${efic}% no ${lvlTxt}`);
+            alert(`Fim! Precisão de ${efic}% no ${lvlTag}`);
             location.reload();
         }
 
-        function salvarNoRanking(n, av, ef, lv) {
-            let rank = JSON.parse(localStorage.getItem('rank_tab_v2')) || [];
-            rank.push({ nome: n, avatar: av, efic: ef, lvl: lv });
-            rank.sort((a, b) => b.lvl.localeCompare(a.lvl) || b.efic - a.efic);
-            localStorage.setItem('rank_tab_v2', JSON.stringify(rank.slice(0, 10)));
+        function salvarRanking(n, av, ef, lv) {
+            let r = JSON.parse(localStorage.getItem('rank_final')) || [];
+            r.push({nome: n, avatar: av, efic: ef, lvl: lv});
+            r.sort((a,b) => b.efic - a.efic); // Ordena apenas por %
+            localStorage.setItem('rank_final', JSON.stringify(r.slice(0, 10)));
         }
 
         function verRanking() {
-            const rank = JSON.parse(localStorage.getItem('rank_tab_v2')) || [];
-            document.getElementById('ranking-list').innerHTML = rank.map(item => `
+            const r = JSON.parse(localStorage.getItem('rank_final')) || [];
+            document.getElementById('ranking-list').innerHTML = r.map(i => `
                 <div class="rank-item">
-                    <span>${item.avatar} <b>${item.nome}</b></span>
-                    <span>${item.efic}% (${item.lvl})</span>
+                    <span>${i.avatar} ${i.nome}</span>
+                    <span>${i.efic}% (${i.lvl})</span>
                 </div>
-            `).join('') || "Sem recordes!";
+            `).join('') || "Sem recordes";
             document.getElementById('ranking-box').style.display='block';
         }
 
-        function selAvatar(el, icon) { document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected')); el.classList.add('selected'); avatarSel = icon; }
+        function selAvatar(el, icon) { document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); avatarSel = icon; }
+        function abrirAdmin() { if(prompt("Senha:") === "Food2024@") document.getElementById('admin-panel').style.display='block'; }
+        function salvarAdmin() { localStorage.setItem('banner_data', JSON.stringify({text: document.getElementById('edit-text').value, url: document.getElementById('edit-url').value})); location.reload(); }
 
-        window.onload = () => { 
-            if(localStorage.getItem('theme') === 'light') toggleTheme(); 
-            renderBanner(); renderTestimonials();
-        };
+        window.onload = () => { renderBanner(); };
         document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
 </body>
