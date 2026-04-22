@@ -10,41 +10,52 @@
             --primary: #0f3460; --accent: #e94560; --gold: #f1c40f; --success: #27ae60; 
             --dark: #1a1a2e; --card-bg: #ffffff; --text: #1a1a2e; --bg: #1a1a2e; --footer-text: #ffffff;
         }
-        body.light-mode { --bg: #f0f2f5; --card-bg: #ffffff; --text: #1a1a2e; --footer-text: #1a1a2e; }
-        * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 10px; }
+        * { box-sizing: border-box; transition: background 0.3s; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px 10px; }
 
-        /* BANNERS CLICÁVEIS */
-        .banner-wrapper { width: 100%; max-width: 800px; margin-bottom: 20px; background: #16213e; border-radius: 20px; border: 2px solid #444; overflow: hidden; position: relative; height: 100px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .slide { position: absolute; inset: 0; display: flex; align-items: center; padding: 10px 15px; opacity: 0; transition: opacity 0.8s; visibility: hidden; }
+        /* --- BANNERS EXTERNOS --- */
+        .banner-wrapper { width: 100%; max-width: 800px; margin-bottom: 25px; background: #16213e; border-radius: 20px; border: 2px solid #444; overflow: hidden; position: relative; height: 110px; cursor: pointer; }
+        .slide { position: absolute; inset: 0; display: flex; align-items: center; padding: 10px 20px; opacity: 0; transition: opacity 0.8s; visibility: hidden; }
         .slide.active { opacity: 1; visibility: visible; z-index: 5; }
-        .slide img { height: 70px; width: 70px; object-fit: cover; border-radius: 12px; margin-right: 15px; border: 2px solid var(--gold); }
-        .slide-info { text-align: left; }
-        .slide-title { color: var(--gold); font-weight: 800; margin: 0; font-size: 1rem; text-transform: uppercase; }
-        .slide-text { color: #eee; font-size: 0.75rem; margin: 2px 0; line-height: 1.2; }
+        .slide img { height: 80px; width: 80px; object-fit: cover; border-radius: 12px; margin-right: 20px; border: 2px solid var(--gold); }
+        .slide-title { color: var(--gold); font-weight: 800; margin: 0; font-size: 1.1rem; text-transform: uppercase; }
+        .slide-text { color: #ccc; font-size: 0.85rem; margin: 4px 0; line-height: 1.3; }
 
-        .card { background: var(--card-bg); color: var(--text); padding: 25px; border-radius: 30px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; width: 100%; max-width: 500px; }
-        .question { font-size: clamp(3rem, 10vh, 5rem); font-weight: 900; color: var(--primary); margin: 15px 0; }
-        #ans { width: 100%; max-width: 180px; font-size: 2.5rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; color: var(--dark); }
-        .btn-main { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
-        .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 700; background: white; display: flex; justify-content: space-between; }
+        /* --- JANELA DO JOGO --- */
+        .card { background: var(--card-bg); color: var(--text); padding: 30px; border-radius: 30px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; width: 100%; max-width: 500px; z-index: 10; }
+        .avatar-grid { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
+        .avatar-option { font-size: 1.8rem; cursor: pointer; padding: 10px; border-radius: 12px; border: 2px solid #eee; background: #f9f9f9; }
+        .avatar-option.selected { border-color: var(--accent); background: #fff0f1; transform: scale(1.1); }
+        .question { font-size: clamp(3.5rem, 12vh, 5.5rem); font-weight: 900; color: var(--primary); margin: 20px 0; }
+        #ans { width: 100%; max-width: 200px; font-size: 3rem; text-align: center; border-radius: 15px; border: 3px solid #eee; padding: 10px; background: #fdfdfd; color: var(--dark); }
+        .btn-main { background: var(--accent); color: white; border: none; padding: 16px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 12px; font-size: 1rem; }
+        .lvl-btn { padding: 14px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 10px; cursor: pointer; color: #333; font-weight: 700; background: white; display: flex; justify-content: space-between; align-items: center; }
         
-        #ranking-box, #cert-box { display: none; position: absolute; inset: 0; background: white; z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333; }
-        .rank-item { padding: 8px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        /* --- MURAL E CONTEÚDO ADICIONAL --- */
+        .extra-content { width: 100%; max-width: 800px; margin-top: 50px; text-align: center; }
+        .section-title { color: var(--gold); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .mural-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .testi-card { background: #16213e; padding: 20px; border-radius: 20px; border-left: 5px solid var(--gold); text-align: left; }
+        .testi-name { font-weight: bold; color: var(--gold); margin-bottom: 5px; display: block; }
+        .testi-text { font-size: 0.9rem; color: #eee; font-style: italic; }
 
-        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 95%; max-width: 450px; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
-        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
-        footer { margin-top: 40px; text-align: center; font-size: 0.8rem; opacity: 0.7; color: white; cursor: pointer; }
+        /* --- ADMIN --- */
+        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 30px; border-radius: 25px; z-index: 2000; width: 95%; max-width: 450px; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
+        .admin-input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 10px; }
+
+        #ranking-box { display: none; position: absolute; inset: 0; background: white; z-index: 100; border-radius: 30px; padding: 25px; overflow-y: auto; color: #333; }
+        .rank-item { padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: 600; }
+
+        footer { margin-top: 60px; padding: 20px; text-align: center; font-size: 0.9rem; color: #888; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="banner-wrapper" id="banner-area">
-        </div>
+    <div class="banner-wrapper" id="banner-area"></div>
 
     <div id="setup-screen" class="card">
         <div id="ranking-box">
-            <h2 style="color:var(--primary)">🏆 RANKING</h2>
+            <h2 style="color:var(--primary)">🏆 TOP RECORDES</h2>
             <div id="ranking-list"></div>
             <button class="btn-main" onclick="document.getElementById('ranking-box').style.display='none'" style="background:#888">VOLTAR</button>
         </div>
@@ -52,160 +63,211 @@
         <strong style="color:var(--accent)">👨‍🏫 Professor Hilário</strong>
         <h2>⚔️ BATALHA DA TABUADA</h2>
         
-        <input type="text" id="nome-aluno" placeholder="Nome Completo" style="width:100%; padding:12px; border-radius:12px; border:2px solid #ddd; text-align: center;" oninput="validarProgresso()">
+        <input type="text" id="nome-aluno" placeholder="Nome do Guerreiro" style="width:100%; padding:15px; border-radius:15px; border:2px solid #ddd; text-align: center; font-size: 1.1rem;" oninput="validarProgresso()">
         
-        <div id="lvls" style="margin-top:15px">
-            <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)"><span>🛡️ Nível 1</span> <span class="lock">🔓</span></div>
-            <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)"><span>⚔️ Nível 2</span> <span class="lock" id="l1">🔒</span></div>
-            <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)"><span>🐉 Nível 3</span> <span class="lock" id="l2">🔒</span></div>
+        <div class="avatar-grid">
+            <div class="avatar-option selected" onclick="selAvatar(this, '⚔️')">⚔️</div>
+            <div class="avatar-option" onclick="selAvatar(this, '🏹')">🏹</div>
+            <div class="avatar-option" onclick="selAvatar(this, '🧙')">🧙</div>
+            <div class="avatar-option" onclick="selAvatar(this, '🤖')">🤖</div>
         </div>
 
-        <button class="btn-main" onclick="tentarIniciar()">JOGAR</button>
+        <div style="margin: 15px 0; font-size: 0.9rem; color: #666;">
+            <label style="cursor:pointer"><input type="checkbox" id="narration-mode"> 🔊 Modo Narrador (Voz)</label>
+        </div>
+
+        <div id="lvls">
+            <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)"><span>🛡️ Nível 1</span> <span id="l0">🔓</span></div>
+            <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)"><span>⚔️ Nível 2</span> <span id="l1">🔒</span></div>
+            <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)"><span>🐉 Nível 3</span> <span id="l2">🔒</span></div>
+        </div>
+
+        <button class="btn-main" onclick="tentarIniciar()">INICIAR BATALHA</button>
         <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 RANKING</button>
     </div>
 
     <div id="game-screen" class="card" style="display:none;">
-        <div id="life-bar" style="width:100%; height:12px; background:var(--success); border-radius:10px; margin-bottom:10px;"></div>
-        <h2 id="time-txt">--</h2>
+        <div style="width:100%; background:#eee; height:15px; border-radius:10px; overflow:hidden; margin-bottom:15px;">
+            <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
+        </div>
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+            <span id="player-tag" style="font-size:2rem"></span>
+            <h2 id="time-txt" style="color:var(--primary); margin:0; font-size: 2rem;">--</h2>
+        </div>
         <div id="q-box" class="question">? x ?</div>
         <input type="number" id="ans" inputmode="numeric">
-        <button class="btn-main" onclick="check()">ATACAR!</button>
+        <button class="btn-main" onclick="check()">LANÇAR ATAQUE!</button>
     </div>
 
-    <footer onclick="abrirAdmin()">© 2026 Hilário Schwanz | Painel Admin</footer>
+    <div class="extra-content">
+        <h3 class="section-title">Mural de Campeões</h3>
+        <div class="mural-grid" id="mural-area">
+            </div>
+    </div>
+
+    <footer onclick="abrirAdmin()">© 2026 Hilário Schwanz | Configurações Admin</footer>
 
     <div id="admin-panel">
-        <h3>Configurar Banners</h3>
-        <select id="ad-slot" class="admin-input" onchange="carregarDadosAdmin()">
-            <option value="1">Slot 1 (Zelayce)</option>
-            <option value="2">Slot 2 (Beer Food Truck)</option>
-            <option value="3">Slot 3 (Stop Lanche)</option>
+        <h3>Painel de Controle</h3>
+        <select id="admin-mode" class="admin-input" onchange="toggleAdminView()">
+            <option value="banners">Gerenciar Banners (3 Slots)</option>
+            <option value="mural">Gerenciar Mural</option>
         </select>
-        <input type="text" id="edit-title" placeholder="Título" class="admin-input">
-        <input type="text" id="edit-desc" placeholder="Descrição curta" class="admin-input">
-        <input type="text" id="edit-url" placeholder="URL da Imagem" class="admin-input">
-        <input type="text" id="edit-link" placeholder="Link (Instagram/WhatsApp)" class="admin-input">
-        <button class="btn-main" onclick="salvarAdmin()">SALVAR SLOT</button>
+
+        <div id="admin-banners">
+            <select id="ad-slot" class="admin-input" onchange="carregarCamposAdmin()">
+                <option value="1">Patrocinador 1</option>
+                <option value="2">Patrocinador 2</option>
+                <option value="3">Patrocinador 3</option>
+            </select>
+            <input type="text" id="ad-title" placeholder="Nome do Patrocinador" class="admin-input">
+            <input type="text" id="ad-desc" placeholder="Descrição (Promoção)" class="admin-input">
+            <input type="text" id="ad-img" placeholder="Link da Imagem (URL)" class="admin-input">
+            <input type="text" id="ad-link" placeholder="Link do WhatsApp/Insta" class="admin-input">
+        </div>
+
+        <button class="btn-main" onclick="salvarGeral()">SALVAR ALTERAÇÕES</button>
         <button class="btn-main" style="background:#888" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
     </div>
 
     <script>
-        let curLvl = 0, ativo = false, vida = 100, acertos = 0, tentativas = 0, res, crono, tempo;
-        let slideIndex = 0;
+        const synth = window.speechSynthesis;
+        let avatarSel = "⚔️", narrar = false, curLvl = 0, slideIdx = 0;
+        let ativo = false, vida = 100, acertos = 0, tentativas = 0, res, crono, tempo;
+        let conf = [{t:10, d:20}, {t:8, d:25}, {t:6, d:34}];
 
-        // INICIALIZAÇÃO DOS BANNERS
-        function carregarBanners() {
-            const container = document.getElementById('banner-area');
+        function falar(t) { if(narrar) { synth.cancel(); const m = new SpeechSynthesisUtterance(t); m.lang='pt-BR'; synth.speak(m); } }
+
+        // --- LÓGICA DE BANNERS (EXTERNA) ---
+        function renderBanners() {
+            const area = document.getElementById('banner-area');
             let html = '';
             for(let i=1; i<=3; i++) {
-                const data = JSON.parse(localStorage.getItem('ad_slot_'+i)) || { title: "Anuncie Aqui", desc: "Espaço disponível", url: "", link: "#" };
+                const d = JSON.parse(localStorage.getItem('h_ad_'+i)) || { title: "Anuncie Aqui", desc: "Espaço disponível para sua empresa", url: "", link: "#" };
                 html += `
-                    <div class="slide ${i===1?'active':''}" onclick="window.open('${data.link}', '_blank')">
-                        <img src="${data.url || 'https://via.placeholder.com/70'}">
+                    <div class="slide ${i===1?'active':''}" onclick="window.open('${d.link}', '_blank')">
+                        <img src="${d.url || 'https://via.placeholder.com/80'}">
                         <div class="slide-info">
-                            <p class="slide-title">${data.title}</p>
-                            <p class="slide-text">${data.desc}</p>
+                            <p class="slide-title">${d.title}</p>
+                            <p class="slide-text">${d.desc}</p>
                         </div>
                     </div>`;
             }
-            container.innerHTML = html;
-            iniciarRotacao();
-        }
-
-        function iniciarRotacao() {
+            area.innerHTML = html;
             setInterval(() => {
-                const slides = document.querySelectorAll('.slide');
-                slides[slideIndex].classList.remove('active');
-                slideIndex = (slideIndex + 1) % slides.length;
-                slides[slideIndex].classList.add('active');
+                const s = document.querySelectorAll('.slide');
+                if(s.length) {
+                    s[slideIdx].classList.remove('active');
+                    slideIdx = (slideIdx + 1) % s.length;
+                    s[slideIdx].classList.add('active');
+                }
             }, 5000);
         }
 
-        // ADMIN
-        function abrirAdmin() { if(prompt("Senha:") === "Food2024@") { document.getElementById('admin-panel').style.display='block'; carregarDadosAdmin(); } }
-        function carregarDadosAdmin() {
+        // --- ADMIN ---
+        function abrirAdmin() { if(prompt("Senha:") === "Food2024@") { document.getElementById('admin-panel').style.display='block'; carregarCamposAdmin(); } }
+        function carregarCamposAdmin() {
             const slot = document.getElementById('ad-slot').value;
-            const data = JSON.parse(localStorage.getItem('ad_slot_'+slot)) || { title: "", desc: "", url: "", link: "" };
-            document.getElementById('edit-title').value = data.title;
-            document.getElementById('edit-desc').value = data.desc;
-            document.getElementById('edit-url').value = data.url;
-            document.getElementById('edit-link').value = data.link;
+            const d = JSON.parse(localStorage.getItem('h_ad_'+slot)) || { title: "", desc: "", url: "", link: "" };
+            document.getElementById('ad-title').value = d.title;
+            document.getElementById('ad-desc').value = d.desc;
+            document.getElementById('ad-img').value = d.url;
+            document.getElementById('ad-link').value = d.link;
         }
-        function salvarAdmin() {
+        function salvarGeral() {
             const slot = document.getElementById('ad-slot').value;
-            const obj = {
-                title: document.getElementById('edit-title').value,
-                desc: document.getElementById('edit-desc').value,
-                url: document.getElementById('edit-url').value,
-                link: document.getElementById('edit-link').value
-            };
-            localStorage.setItem('ad_slot_'+slot, JSON.stringify(obj));
-            alert("Salvo com sucesso!");
+            const obj = { title: document.getElementById('ad-title').value, desc: document.getElementById('ad-desc').value, url: document.getElementById('ad-img').value, link: document.getElementById('ad-link').value };
+            localStorage.setItem('h_ad_'+slot, JSON.stringify(obj));
             location.reload();
         }
 
-        // JOGO (RESTAURADO)
+        // --- JOGO ---
         function validarProgresso() {
             const n = document.getElementById('nome-aluno').value.trim();
-            const p = parseInt(localStorage.getItem('prog_'+n)) || 0;
+            const p = parseInt(localStorage.getItem('h_prog_'+n)) || 0;
             document.getElementById('l1').innerText = p >= 1 ? "🔓" : "🔒";
             document.getElementById('l2').innerText = p >= 2 ? "🔓" : "🔒";
         }
 
         function selecionarNivel(l) {
             const n = document.getElementById('nome-aluno').value.trim();
-            if(!n) return;
-            const p = parseInt(localStorage.getItem('prog_'+n)) || 0;
-            if(l > p) return alert("Nível Bloqueado!");
+            if(!n) return alert("Digite seu nome!");
+            const p = parseInt(localStorage.getItem('h_prog_'+n)) || 0;
+            if(l > p) return alert("Nível bloqueado!");
             curLvl = l;
             document.querySelectorAll('.lvl-btn').forEach(b => b.style.background = "white");
             document.getElementById('btn-'+l).style.background = "#eee";
         }
 
         function tentarIniciar() {
-            if(document.getElementById('nome-aluno').value.length < 3) return;
+            if(document.getElementById('nome-aluno').value.length < 3) return alert("Nome muito curto!");
+            narrar = document.getElementById('narration-mode').checked;
             document.getElementById('setup-screen').style.display='none';
             document.getElementById('game-screen').style.display='block';
+            document.getElementById('player-tag').innerText = avatarSel;
+            vida=100; acertos=0; tentativas=0; ativo=true;
             rodar();
         }
 
         function rodar() {
+            if(!ativo) return;
             let r1 = Math.floor(Math.random()*8)+2, r2 = Math.floor(Math.random()*8)+2;
             res = r1 * r2;
             document.getElementById('q-box').innerText = r1 + " × " + r2;
             document.getElementById('ans').value = ""; document.getElementById('ans').focus();
+            falar(`${r1} vezes ${r2}`);
+            clearInterval(crono); tempo = conf[curLvl].t;
+            document.getElementById('time-txt').innerText = tempo+"s";
+            crono = setInterval(() => {
+                tempo--; document.getElementById('time-txt').innerText = tempo+"s";
+                if(tempo <= 0) { vida -= conf[curLvl].d; atualizarVida(); if(vida <= 0) finalizar(); else rodar(); }
+            }, 1000);
         }
 
         function check() {
-            let v = parseInt(document.getElementById('ans').value);
+            let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
             tentativas++;
-            if(v === res) acertos++;
-            if(tentativas >= 20) finalizar(); else rodar();
+            if(v === res) { acertos++; falar("Boa!"); }
+            else { vida -= conf[curLvl].d; falar("Errou!"); }
+            atualizarVida();
+            if(vida <= 0 || tentativas >= 20) finalizar(); else rodar();
         }
 
+        function atualizarVida() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
+
         function finalizar() {
+            ativo = false; clearInterval(crono);
             const n = document.getElementById('nome-aluno').value.trim();
-            const ef = Math.round((acertos/tentativas)*100);
-            const r = JSON.parse(localStorage.getItem('rank_tab')) || [];
-            r.push({nome: n, efic: ef, lvl: (curLvl+1)});
-            r.sort((a,b) => b.efic - a.efic);
-            localStorage.setItem('rank_tab', JSON.stringify(r.slice(0,10)));
-            
-            if(ef >= 70) {
-                const p = parseInt(localStorage.getItem('prog_'+n)) || 0;
-                if(curLvl >= p) localStorage.setItem('prog_'+n, curLvl+1);
+            const ef = Math.round((acertos/tentativas)*100) || 0;
+            salvarRanking(n, avatarSel, ef, (curLvl+1));
+            if(vida > 0) {
+                const p = parseInt(localStorage.getItem('h_prog_'+n)) || 0;
+                if(curLvl >= p) localStorage.setItem('h_prog_'+n, curLvl + 1);
+                if(curLvl === 2 && ef >= 75) confetti();
             }
-            alert("Fim! Precisão: " + ef + "%");
+            alert(`Fim de Jogo! Precisão: ${ef}%`);
             location.reload();
         }
 
+        function salvarRanking(n, av, ef, lv) {
+            let r = JSON.parse(localStorage.getItem('h_rank')) || [];
+            r.push({nome: n, avatar: av, efic: ef, lvl: lv});
+            r.sort((a,b) => b.efic - a.efic);
+            localStorage.setItem('h_rank', JSON.stringify(r.slice(0,10)));
+        }
+
         function verRanking() {
-            const r = JSON.parse(localStorage.getItem('rank_tab')) || [];
-            document.getElementById('ranking-list').innerHTML = r.map(i => `<div class="rank-item"><span>${i.nome}</span><span>${i.efic}% (Nível ${i.lvl})</span></div>`).join('');
+            const r = JSON.parse(localStorage.getItem('h_rank')) || [];
+            document.getElementById('ranking-list').innerHTML = r.map(i => `
+                <div class="rank-item"><span>${i.avatar} ${i.nome}</span><span>${i.efic}% (Nível ${i.lvl})</span></div>
+            `).join('') || "Sem recordes!";
             document.getElementById('ranking-box').style.display='block';
         }
 
-        window.onload = carregarBanners;
+        function selAvatar(el, icon) { document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected')); el.classList.add('selected'); avatarSel = icon; }
+
+        window.onload = renderBanners;
+        document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
 </body>
 </html>
