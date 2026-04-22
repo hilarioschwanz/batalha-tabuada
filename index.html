@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Batalha da Tabuada - Hilário Schwanz</title>
+    <title>Batalha da Tabuada - Prof. Hilário</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --primary: #0f3460; --accent: #e94560; --gold: #f1c40f; --success: #27ae60; --dark: #1a1a2e; }
@@ -15,6 +15,7 @@
             min-height: 100vh; padding: 10px;
         }
 
+        /* BANNER */
         .banner-wrapper {
             width: 100%; max-width: 800px; margin-bottom: 20px;
             background: #16213e; border-radius: 20px; border: 2px solid #444;
@@ -27,18 +28,15 @@
         .slide-title { color: var(--gold); font-weight: 800; margin: 0; font-size: 1rem; }
         .slide-text { font-size: 0.8rem; color: #ccc; margin: 2px 0; }
 
+        /* JOGO */
         .card { 
             background: #fff; color: var(--dark); padding: 25px; border-radius: 30px; 
             text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); 
             position: relative; width: 100%; max-width: 500px;
         }
 
-        /* SELEÇÃO DE AVATAR */
         .avatar-grid { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
-        .avatar-option { 
-            font-size: 2rem; cursor: pointer; padding: 10px; border-radius: 15px; 
-            border: 2px solid #eee; transition: 0.3s; background: #f9f9f9;
-        }
+        .avatar-option { font-size: 2rem; cursor: pointer; padding: 10px; border-radius: 15px; border: 2px solid #eee; background: #f9f9f9; transition: 0.3s; }
         .avatar-option.selected { border-color: var(--accent); background: #fff0f1; transform: scale(1.1); }
         
         .question { font-size: clamp(3rem, 10vh, 5rem); font-weight: 900; color: var(--primary); margin: 15px 0; }
@@ -46,14 +44,22 @@
         .btn-main { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 15px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
         
         .lvl-btn { padding: 10px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 600; }
-        
         #ranking-box, #cert-box { display: none; position: absolute; inset: 0; background: white; z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333; }
         .rank-item { text-align: left; padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
 
-        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 90%; max-width: 400px; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
+        /* SEÇÃO DE DEPOIMENTOS */
+        .testimonials-section { width: 100%; max-width: 800px; margin-top: 50px; text-align: center; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .testi-card { background: #16213e; padding: 20px; border-radius: 20px; border-left: 5px solid var(--gold); text-align: left; position: relative; }
+        .testi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .testi-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #222; }
+        .testi-name { font-weight: bold; color: var(--gold); font-size: 0.9rem; }
+        .testi-text { font-size: 0.85rem; font-style: italic; color: #eee; line-height: 1.4; }
+
+        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 95%; max-width: 450px; box-shadow: 0 0 100px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
         .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
 
-        footer { margin-top: 20px; text-align: center; font-size: 0.8rem; opacity: 0.5; }
+        footer { margin-top: 40px; text-align: center; font-size: 0.8rem; opacity: 0.5; padding-bottom: 30px; }
     </style>
 </head>
 <body>
@@ -67,10 +73,10 @@
             <button class="btn-main" onclick="fecharJanelas()" style="background:#888">VOLTAR</button>
         </div>
 
-        <strong style="color:var(--accent)">👨‍🏫 Hilário Schwanz</strong>
+        <strong style="color:var(--accent)">👨‍🏫 Professor Hilário</strong>
         <h2 style="margin: 5px 0;">⚔️ BATALHA DA TABUADA</h2>
         
-        <input type="text" id="nome-aluno" placeholder="Nome Completo" style="width:100%; padding:12px; border-radius:12px; border:2px solid #ddd; text-align: center;" oninput="validarNome()">
+        <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:12px; border-radius:12px; border:2px solid #ddd; text-align: center;" oninput="validarNome()">
         
         <p style="margin: 10px 0 5px; font-weight: bold;">Escolha seu Avatar:</p>
         <div class="avatar-grid">
@@ -121,22 +127,43 @@
         <button class="btn-main" onclick="check()">ATACAR!</button>
     </div>
 
+    <section class="testimonials-section">
+        <h3 style="color: var(--gold)">Mural de Conquistas 💬</h3>
+        <div class="testimonials-grid" id="testi-area">
+            </div>
+    </section>
+
     <footer>
         <p onclick="abrirAdmin()" style="cursor:pointer">© 2026 Hilário Schwanz | <span id="visits">...</span></p>
     </footer>
 
-    <div id="admin-panel" style="display: none;">
-        <h3>Admin Banner</h3>
-        <select id="edit-select" onchange="carregarCampos()" class="admin-input">
-            <option value="ad1">Slot 1</option><option value="ad2">Slot 2</option>
-            <option value="ad3">Slot 3</option><option value="ad4">Slot 4</option>
-            <option value="ad5">Slot 5</option>
-        </select>
-        <input type="text" id="edit-text" placeholder="Título" class="admin-input">
-        <input type="text" id="edit-sub" placeholder="Subtítulo" class="admin-input">
-        <input type="text" id="edit-url" placeholder="URL Imagem" class="admin-input">
-        <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
-        <button class="btn-main" onclick="salvarAdmin()">SALVAR</button>
+    <div id="admin-panel">
+        <h3 id="adm-title">Painel de Controle</h3>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button onclick="switchTab('ads')" style="flex:1; padding:5px; font-size:0.7rem">Banners</button>
+            <button onclick="switchTab('testi')" style="flex:1; padding:5px; font-size:0.7rem">Mural</button>
+        </div>
+
+        <div id="tab-ads">
+            <select id="edit-select" onchange="carregarCampos()" class="admin-input">
+                <option value="ad1">Banner 1</option><option value="ad2">Banner 2</option><option value="ad3">Banner 3</option>
+            </select>
+            <input type="text" id="edit-text" placeholder="Título" class="admin-input">
+            <input type="text" id="edit-sub" placeholder="Subtítulo" class="admin-input">
+            <input type="text" id="edit-url" placeholder="URL Imagem" class="admin-input">
+            <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
+        </div>
+
+        <div id="tab-testi" style="display:none">
+            <select id="edit-testi-sel" onchange="carregarTestiCampos()" class="admin-input">
+                <option value="t1">Depoimento 1</option><option value="t2">Depoimento 2</option><option value="t3">Depoimento 3</option>
+            </select>
+            <input type="text" id="t-name" placeholder="Nome do Aluno/Pai" class="admin-input">
+            <input type="text" id="t-img" placeholder="URL da Foto" class="admin-input">
+            <textarea id="t-text" placeholder="Frase ou Depoimento" class="admin-input" style="height:80px;"></textarea>
+        </div>
+
+        <button class="btn-main" onclick="salvarGeral()">SALVAR TUDO</button>
         <button class="btn-main" style="background:#888" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
     </div>
 
@@ -150,131 +177,97 @@
             else if (type === 'win') { [523, 659, 783].forEach((f, i) => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.value = f; g.gain.setValueAtTime(0.1, now + (i * 0.1)); g.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.1) + 0.4); o.start(now + (i * 0.1)); o.stop(now + (i * 0.1) + 0.4); }); }
         }
 
-        let currentSlide = 0, avatarSel = "⚔️";
-        function selAvatar(el, icon) {
-            document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
-            el.classList.add('selected');
-            avatarSel = icon;
+        let currentSlide = 0, avatarSel = "⚔️", activeTab = 'ads';
+
+        function switchTab(t) {
+            activeTab = t;
+            document.getElementById('tab-ads').style.display = t === 'ads' ? 'block' : 'none';
+            document.getElementById('tab-testi').style.display = t === 'testi' ? 'block' : 'none';
         }
 
         function renderBanner() {
             const container = document.getElementById('banner-area');
             let html = '', hasAds = false;
-            ['ad1','ad2','ad3','ad4','ad5'].forEach((id, index) => {
+            ['ad1','ad2','ad3'].forEach((id, index) => {
                 const data = JSON.parse(localStorage.getItem('sp_' + id));
                 if(data && data.text) {
                     hasAds = true;
                     html += `<div class="slide ${index === 0 ? 'active' : ''}" onclick="window.open('${data.dest}', '_blank')"><img src="${data.url}"><div class="slide-info"><p class="slide-title">${data.text}</p><p class="slide-text">${data.sub}</p></div></div>`;
                 }
             });
-            container.innerHTML = hasAds ? html : `<div class="slide active"><p style="color:#666">Espaço para Anunciantes</p></div>`;
+            container.innerHTML = hasAds ? html : `<div class="slide active"><p style="color:#666">Espaço para Patrocinadores</p></div>`;
             if(hasAds) setInterval(() => { const s = document.querySelectorAll('.slide'); if(s.length > 1) { s[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % s.length; s[currentSlide].classList.add('active'); } }, 5000);
+        }
+
+        function renderTestimonials() {
+            const container = document.getElementById('testi-area');
+            let html = '';
+            ['t1','t2','t3'].forEach(id => {
+                const data = JSON.parse(localStorage.getItem('testi_' + id));
+                if(data && data.name) {
+                    html += `
+                        <div class="testi-card">
+                            <div class="testi-header">
+                                <img src="${data.img || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="testi-img">
+                                <div class="testi-name">${data.name}</div>
+                            </div>
+                            <div class="testi-text">"${data.text}"</div>
+                        </div>
+                    `;
+                }
+            });
+            container.innerHTML = html || "<p style='opacity:0.5'>Em breve, relatos de nossos campeões!</p>";
+        }
+
+        function abrirAdmin() { 
+            if(prompt("Senha:") === "Food2024@") { 
+                document.getElementById('admin-panel').style.display='block'; 
+                carregarCampos(); carregarTestiCampos();
+            }
+        }
+
+        function salvarGeral() {
+            if(activeTab === 'ads') {
+                const id = document.getElementById('edit-select').value;
+                localStorage.setItem('sp_'+id, JSON.stringify({ text: document.getElementById('edit-text').value, sub: document.getElementById('edit-sub').value, url: document.getElementById('edit-url').value, dest: document.getElementById('edit-dest').value }));
+            } else {
+                const id = document.getElementById('edit-testi-sel').value;
+                localStorage.setItem('testi_'+id, JSON.stringify({ name: document.getElementById('t-name').value, img: document.getElementById('t-img').value, text: document.getElementById('t-text').value }));
+            }
+            alert("Salvo com sucesso!"); location.reload();
+        }
+
+        function carregarCampos() {
+            const data = JSON.parse(localStorage.getItem('sp_'+document.getElementById('edit-select').value)) || {text:"", sub:"", url:"", dest:""};
+            document.getElementById('edit-text').value = data.text; document.getElementById('edit-sub').value = data.sub; document.getElementById('edit-url').value = data.url; document.getElementById('edit-dest').value = data.dest;
+        }
+
+        function carregarTestiCampos() {
+            const data = JSON.parse(localStorage.getItem('testi_'+document.getElementById('edit-testi-sel').value)) || {name:"", img:"", text:""};
+            document.getElementById('t-name').value = data.name; document.getElementById('t-img').value = data.img; document.getElementById('t-text').value = data.text;
         }
 
         async function carregarVisitas() {
             try { const res = await fetch('https://api.countapi.xyz/hit/hilario-tabuada/visitas'); const data = await res.json(); document.getElementById('visits').innerText = `Acessos: ${data.value}`; } catch (e) { document.getElementById('visits').innerText = "Acessos: Online"; }
         }
 
-        function abrirAdmin() { 
-            const p = prompt("Senha Administrativa:"); 
-            if(p === "Food2024@") {
-                document.getElementById('admin-panel').style.display='block';
-                carregarCampos();
-            } else if (p !== null) alert("Senha Incorreta!");
-        }
+        window.onload = () => { renderBanner(); renderTestimonials(); carregarVisitas(); };
 
-        function salvarAdmin() {
-            const id = document.getElementById('edit-select').value;
-            localStorage.setItem('sp_'+id, JSON.stringify({ text: document.getElementById('edit-text').value, sub: document.getElementById('edit-sub').value, url: document.getElementById('edit-url').value, dest: document.getElementById('edit-dest').value }));
-            alert("Salvo! Recarregando..."); location.reload();
-        }
-
-        function carregarCampos() {
-            const id = document.getElementById('edit-select').value;
-            const data = JSON.parse(localStorage.getItem('sp_'+id)) || {text:"", sub:"", url:"", dest:""};
-            document.getElementById('edit-text').value = data.text; document.getElementById('edit-sub').value = data.sub; document.getElementById('edit-url').value = data.url; document.getElementById('edit-dest').value = data.dest;
-        }
-
-        window.onload = () => { renderBanner(); carregarVisitas(); };
-
-        // JOGO
+        // LÓGICA DO JOGO
         let conf = [{t:10, d:20}, {t:8, d:30}, {t:5, d:40}];
         let curLvl = 0, nome = "", vida = 100, acertos = 0, tentativas = 0, ativo = false, res, crono, tempo, inicioGame;
 
+        function selAvatar(el, icon) { document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected')); el.classList.add('selected'); avatarSel = icon; }
         function validarNome() { nome = document.getElementById('nome-aluno').value.trim(); let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; document.getElementById('l1').innerText = p >= 1 ? "🔓" : "🔒"; document.getElementById('l2').innerText = p >= 2 ? "🔓" : "🔒"; }
-        function selecionarNivel(l) { if(!nome) return alert("Digite seu nome!"); let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; if(l === 'blitz' || l <= p) { curLvl = l; document.querySelectorAll('.lvl-btn').forEach(b => { b.style.background = "white"; }); let sel = (l === 'blitz') ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l); sel.style.background = "#eee"; if (audioCtx.state === 'suspended') audioCtx.resume(); } }
-        
-        function tentarIniciar() {
-            if(nome.length < 3) return alert("Nome inválido!");
-            document.getElementById('setup-screen').style.display='none';
-            document.getElementById('game-screen').style.display='block';
-            document.getElementById('player-tag').innerText = avatarSel;
-            vida=100; acertos=0; tentativas=0; ativo=true; inicioGame = Date.now();
-            if(curLvl === 'blitz') { document.getElementById('life-container').style.display = 'none'; tempo = 60; crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) fim(); }, 1000); }
-            rodada();
-        }
-
-        function rodada() {
-            if(!ativo) return;
-            let r1 = Math.floor(Math.random()*8)+2; let r2 = Math.floor(Math.random()*8)+2; res = r1 * r2;
-            document.getElementById('q-box').innerText = r1 + " × " + r2;
-            document.getElementById('ans').value = ""; document.getElementById('ans').focus();
-            if(curLvl !== 'blitz') startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(crono); tempo = conf[curLvl].t; document.getElementById('time-txt').innerText = tempo+"s";
-            crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) { acertos--; vida -= conf[curLvl].d; playSound('miss'); updateLife(); if(vida <= 0) fim(); else rodada(); } }, 1000);
-        }
-
-        function check() {
-            let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return;
-            tentativas++;
-            if(v === res) { acertos++; playSound('hit'); if(curLvl !== 'blitz') vida = Math.min(100, vida+5); } 
-            else { playSound('miss'); if(curLvl !== 'blitz') vida -= conf[curLvl].d; else tempo = Math.max(0, tempo-2); }
-            if(curLvl !== 'blitz') { updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); } else rodada();
-        }
-
+        function selecionarNivel(l) { if(!nome) return alert("Nome?"); let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; if(l === 'blitz' || l <= p) { curLvl = l; document.querySelectorAll('.lvl-btn').forEach(b => b.style.background = "white"); let sel = (l === 'blitz') ? document.getElementById('btn-blitz') : document.getElementById('btn-'+l); sel.style.background = "#eee"; if (audioCtx.state === 'suspended') audioCtx.resume(); } }
+        function tentarIniciar() { if(nome.length < 3) return; document.getElementById('setup-screen').style.display='none'; document.getElementById('game-screen').style.display='block'; document.getElementById('player-tag').innerText = avatarSel; vida=100; acertos=0; tentativas=0; ativo=true; inicioGame = Date.now(); if(curLvl === 'blitz') { document.getElementById('life-container').style.display = 'none'; tempo = 60; crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) fim(); }, 1000); } rodada(); }
+        function rodada() { if(!ativo) return; let r1 = Math.floor(Math.random()*8)+2, r2 = Math.floor(Math.random()*8)+2; res = r1 * r2; document.getElementById('q-box').innerText = r1 + " × " + r2; document.getElementById('ans').value = ""; document.getElementById('ans').focus(); if(curLvl !== 'blitz') startTimer(); }
+        function startTimer() { clearInterval(crono); tempo = conf[curLvl].t; document.getElementById('time-txt').innerText = tempo+"s"; crono = setInterval(() => { tempo--; document.getElementById('time-txt').innerText = tempo+"s"; if(tempo <= 0) { acertos--; vida -= conf[curLvl].d; playSound('miss'); updateLife(); if(vida <= 0) fim(); else rodada(); } }, 1000); }
+        function check() { let v = parseInt(document.getElementById('ans').value); if(isNaN(v)) return; tentativas++; if(v === res) { acertos++; playSound('hit'); if(curLvl !== 'blitz') vida = Math.min(100, vida+5); } else { playSound('miss'); if(curLvl !== 'blitz') vida -= conf[curLvl].d; else tempo = Math.max(0, tempo-2); } if(curLvl !== 'blitz') { updateLife(); if(vida <= 0 || tentativas >= 20) fim(); else rodada(); } else rodada(); }
         function updateLife() { document.getElementById('life-bar').style.width = Math.max(0, vida) + "%"; }
-
-        function fim() {
-            ativo = false; clearInterval(crono);
-            let tFinal = ((Date.now() - inicioGame) / 1000).toFixed(1);
-            let efic = ((acertos / tentativas) * 100 || 0).toFixed(1);
-            document.getElementById('game-over').style.display = 'flex';
-            document.getElementById('go-avatar').innerText = avatarSel;
-            document.getElementById('go-icon').innerText = (vida > 0 || curLvl === 'blitz') ? "🏆" : "💀";
-            document.getElementById('go-title').innerText = (vida > 0 || curLvl === 'blitz') ? "VITÓRIA!" : "DERROTA!";
-            document.getElementById('go-stats').innerHTML = `Eficiência: ${efic}%<br>Tempo: ${tFinal}s`;
-            if(curLvl === 2 || curLvl === 'blitz') {
-                salvarRanking(nome, avatarSel, efic, tFinal);
-                if(efic >= 75 && curLvl === 2) { 
-                    confetti(); playSound('win'); 
-                    document.getElementById('cert-avatar').innerText = avatarSel;
-                    document.getElementById('cert-nome-txt').innerText = nome.toUpperCase();
-                    document.getElementById('cert-efic').innerText = efic;
-                    document.getElementById('cert-box').style.display = 'block'; 
-                }
-            }
-            if(vida > 0 && curLvl !== 'blitz' && curLvl < 2) {
-                let p = parseInt(localStorage.getItem('prog_'+nome)) || 0;
-                if(curLvl >= p) localStorage.setItem('prog_'+nome, curLvl+1);
-            }
-        }
-
-        function salvarRanking(n, av, ef, tm) {
-            let r = JSON.parse(localStorage.getItem('rank_global')) || [];
-            r.push({nome: n, avatar: av, efic: ef, tempo: tm});
-            r.sort((a,b) => b.efic - a.efic || a.tempo - b.tempo);
-            localStorage.setItem('rank_global', JSON.stringify(r.slice(0, 10)));
-        }
-
-        function verRanking() {
-            let r = JSON.parse(localStorage.getItem('rank_global')) || [];
-            document.getElementById('ranking-list').innerHTML = r.map((x, i) => `<div class="rank-item"><span>${i+1}º</span> <span>${x.avatar}</span> <b>${x.nome}</b> - ${x.efic}%</div>`).join('') || "Sem recordes.";
-            document.getElementById('ranking-box').style.display = 'block';
-        }
-
+        function fim() { ativo = false; clearInterval(crono); let tFinal = ((Date.now() - inicioGame) / 1000).toFixed(1); let efic = ((acertos / tentativas) * 100 || 0).toFixed(1); document.getElementById('game-over').style.display = 'flex'; document.getElementById('go-avatar').innerText = avatarSel; document.getElementById('go-icon').innerText = (vida > 0 || curLvl === 'blitz') ? "🏆" : "💀"; document.getElementById('go-stats').innerHTML = `Eficiência: ${efic}%<br>Tempo: ${tFinal}s`; if(curLvl === 2 || curLvl === 'blitz') { salvarRanking(nome, avatarSel, efic, tFinal); if(efic >= 75 && curLvl === 2) { confetti(); playSound('win'); document.getElementById('cert-avatar').innerText = avatarSel; document.getElementById('cert-nome-txt').innerText = nome.toUpperCase(); document.getElementById('cert-efic').innerText = efic; document.getElementById('cert-box').style.display = 'block'; } } if(vida > 0 && curLvl !== 'blitz' && curLvl < 2) { let p = parseInt(localStorage.getItem('prog_'+nome)) || 0; if(curLvl >= p) localStorage.setItem('prog_'+nome, curLvl+1); } }
+        function salvarRanking(n, av, ef, tm) { let r = JSON.parse(localStorage.getItem('rank_global')) || []; r.push({nome: n, avatar: av, efic: ef, tempo: tm}); r.sort((a,b) => b.efic - a.efic || a.tempo - b.tempo); localStorage.setItem('rank_global', JSON.stringify(r.slice(0, 10))); }
+        function verRanking() { let r = JSON.parse(localStorage.getItem('rank_global')) || []; document.getElementById('ranking-list').innerHTML = r.map((x, i) => `<div class="rank-item"><span>${i+1}º</span> <span>${x.avatar}</span> <b>${x.nome}</b> - ${x.efic}%</div>`).join('') || "Vazio."; document.getElementById('ranking-box').style.display = 'block'; }
         function fecharJanelas() { document.getElementById('ranking-box').style.display = 'none'; }
         document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
