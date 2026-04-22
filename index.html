@@ -16,6 +16,14 @@
 
         .theme-toggle { position: fixed; top: 15px; right: 15px; background: var(--accent); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; z-index: 1000; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
+        /* BANNERS */
+        .banner-wrapper { width: 100%; max-width: 800px; margin-bottom: 20px; background: #16213e; border-radius: 20px; border: 2px solid #444; overflow: hidden; position: relative; height: 100px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .slide { position: absolute; inset: 0; display: flex; align-items: center; padding: 10px 15px; opacity: 0; transition: opacity 0.8s; }
+        .slide.active { opacity: 1; z-index: 5; }
+        .slide img { height: 70px; width: 70px; object-fit: cover; border-radius: 12px; margin-right: 15px; border: 2px solid var(--gold); }
+        .slide-title { color: var(--gold); font-weight: 800; margin: 0; font-size: 1rem; }
+        .slide-text { font-size: 0.8rem; color: #ccc; margin: 2px 0; }
+
         /* JOGO */
         .card { background: var(--card-bg); color: var(--text); padding: 25px; border-radius: 30px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); position: relative; width: 100%; max-width: 500px; }
         .avatar-grid { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
@@ -29,23 +37,41 @@
         .lvl-btn { padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 8px; cursor: pointer; color: #333; font-weight: 700; background: white; display: flex; justify-content: space-between; align-items: center; }
         
         #ranking-box, #cert-box { display: none; position: absolute; inset: 0; background: white; z-index: 100; border-radius: 30px; padding: 20px; overflow-y: auto; color: #333; }
-        .rank-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.9rem; }
+        .rank-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
 
-        footer { margin-top: 40px; text-align: center; font-size: 0.8rem; opacity: 0.7; color: var(--footer-text); padding-bottom: 30px; }
+        /* MURAL E BLOG */
+        .section-container { width: 100%; max-width: 800px; margin-top: 40px; text-align: center; }
+        .testi-card { background: #16213e; padding: 20px; border-radius: 20px; border-left: 5px solid var(--gold); text-align: left; margin-bottom: 15px; }
+        body.light-mode .testi-card { background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .testi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .testi-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        .testi-name { font-weight: bold; color: var(--gold); font-size: 0.9rem; }
+        .testi-text { font-size: 0.85rem; font-style: italic; color: #eee; line-height: 1.4; }
+        body.light-mode .testi-text { color: #444; }
+
+        .blog-card { background: #16213e; padding: 25px; border-radius: 20px; border-top: 5px solid var(--accent); margin-top: 20px; text-align: left; }
+        body.light-mode .blog-card { background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        #admin-panel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: #333; padding: 25px; border-radius: 20px; z-index: 2000; width: 95%; max-width: 450px; box-shadow: 0 0 100px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+        .admin-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
+
+        footer { margin-top: 40px; text-align: center; font-size: 0.8rem; opacity: 0.7; color: var(--footer-text); padding-bottom: 30px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
 
+    <div class="banner-wrapper" id="banner-area"></div>
+
     <div id="setup-screen" class="card">
         <div id="ranking-box">
             <h2 style="color:var(--primary)">🏆 RANKING GERAL</h2>
-            <div id="ranking-list"></div>
+            <div id="ranking-list" style="text-align: left; margin-bottom: 20px;"></div>
             <button class="btn-main" onclick="document.getElementById('ranking-box').style.display='none'" style="background:#888">VOLTAR</button>
         </div>
 
-        <strong style="color:var(--accent)">👨‍🏫 Professor</strong>
+        <strong style="color:var(--accent)">👨‍🏫 Professor Hilário</strong>
         <h2 style="margin: 5px 0;">⚔️ BATALHA DA TABUADA</h2>
         
         <input type="text" id="nome-aluno" placeholder="Seu Nome Completo" style="width:100%; padding:12px; border-radius:12px; border:2px solid #ddd; text-align: center; margin-bottom: 10px;" oninput="validarProgresso()">
@@ -58,33 +84,31 @@
         </div>
 
         <div style="margin: 10px 0; font-size: 0.85rem; color: #666;">
-            <label><input type="checkbox" id="narration-mode"> 🔊 Modo Narrador (Acessibilidade)</label>
+            <label><input type="checkbox" id="narration-mode"> 🔊 Modo Narrador (Inclusão)</label>
         </div>
 
         <div id="lvls">
-            <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)"><span>🛡️ Nível 1</span> <span class="lock">🔓</span></div>
-            <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)"><span>⚔️ Nível 2</span> <span class="lock" id="l1">🔒</span></div>
-            <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)"><span>🐉 Nível 3</span> <span class="lock" id="l2">🔒</span></div>
+            <div class="lvl-btn" id="btn-0" onclick="selecionarNivel(0)"><span>🛡️ Nível 1 (2-5)</span> <span class="lock">🔓</span></div>
+            <div class="lvl-btn" id="btn-1" onclick="selecionarNivel(1)"><span>⚔️ Nível 2 (2-9)</span> <span class="lock" id="l1">🔒</span></div>
+            <div class="lvl-btn" id="btn-2" onclick="selecionarNivel(2)"><span>🐉 Nível 3 (6-12)</span> <span class="lock" id="l2">🔒</span></div>
             <div class="lvl-btn" id="btn-blitz" style="border-color:var(--accent); color:var(--accent)" onclick="selecionarNivel('blitz')"><span>⚡ MODO BLITZ</span> <span>🔓</span></div>
         </div>
 
-        <button class="btn-main" onclick="tentarIniciar()">INICIAR BATALHA</button>
-        <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 VER RANKING</button>
+        <button class="btn-main" onclick="tentarIniciar()">ENTRAR NA ARENA</button>
+        <button class="btn-main" style="background:var(--gold); color:var(--dark)" onclick="verRanking()">🏆 RANKING</button>
     </div>
 
     <div id="game-screen" class="card" style="display:none;">
         <div id="cert-box">
             <div style="border: 8px double var(--gold); padding: 15px; background: #fffcf0;">
-                <h2 style="margin:0">MESTRE DA TABUADA</h2>
-                <div id="cert-avatar" style="font-size: 3rem; margin:10px 0"></div>
-                <h1 id="cert-nome-txt" style="font-size:1.5rem; margin:10px 0"></h1>
-                <p>Você provou sua honra no campo da Matemática!</p>
+                <h2>MESTRE DA TABUADA</h2>
+                <div id="cert-avatar" style="font-size: 3rem;"></div>
+                <h1 id="cert-nome-txt"></h1>
+                <p>Conquistou a vitória máxima!</p>
             </div>
-            <button class="btn-main" onclick="location.reload()">SAIR</button>
+            <button class="btn-main" onclick="location.reload()">CONCLUIR</button>
         </div>
 
-        <div id="shield-status" style="position: absolute; top: 10px; left: 10px; font-size: 1.5rem; display: none;">🛡️</div>
-        
         <div id="life-container" style="width:100%; background:#eee; height:12px; border-radius:10px; overflow:hidden; margin-bottom:10px;">
             <div id="life-bar" style="width:100%; height:100%; background:var(--success); transition:0.3s"></div>
         </div>
@@ -97,11 +121,44 @@
         <button class="btn-main" onclick="check()">ATACAR!</button>
     </div>
 
-    <footer>© 2026 Hilário Schwanz</footer>
+    <div class="section-container">
+        <div class="blog-card">
+            <h3 style="color:var(--accent); margin-top:0">Pedagogia por trás do Jogo 📖</h3>
+            <p style="font-size: 0.9rem; line-height: 1.5; color: #ccc;" id="pedagogy-text">
+                A "Batalha da Tabuada" utiliza o conceito de <strong>Gamificação e Repetição Espaçada</strong>. O cérebro humano retém informações com mais facilidade quando há estímulo emocional e feedback imediato. O modo narrador garante a inclusão para todos os alunos.
+            </p>
+        </div>
+        <h3 style="color: var(--gold)">Mural de Campeões 💬</h3>
+        <div id="testi-area" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;"></div>
+    </div>
+
+    <footer onclick="abrirAdmin()">© 2026 Hilário Schwanz | Painel Admin</footer>
+
+    <div id="admin-panel">
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button onclick="switchTab('ads')" style="flex:1">Banners</button>
+            <button onclick="switchTab('testi')" style="flex:1">Mural</button>
+        </div>
+        <div id="tab-ads">
+            <select id="edit-select" onchange="carregarCampos()" class="admin-input"><option value="ad1">Slot 1</option><option value="ad2">Slot 2</option><option value="ad3">Slot 3</option></select>
+            <input type="text" id="edit-text" placeholder="Título" class="admin-input">
+            <input type="text" id="edit-sub" placeholder="Subtítulo" class="admin-input">
+            <input type="text" id="edit-url" placeholder="URL Imagem" class="admin-input">
+            <input type="text" id="edit-dest" placeholder="Link Destino" class="admin-input">
+        </div>
+        <div id="tab-testi" style="display:none">
+            <select id="edit-testi-sel" onchange="carregarTestiCampos()" class="admin-input"><option value="t1">Mural 1</option><option value="t2">Mural 2</option><option value="t3">Mural 3</option></select>
+            <input type="text" id="t-name" placeholder="Nome" class="admin-input">
+            <input type="text" id="t-img" placeholder="URL Foto" class="admin-input">
+            <textarea id="t-text" placeholder="Depoimento" class="admin-input"></textarea>
+        </div>
+        <button class="btn-main" onclick="salvarGeral()">SALVAR</button>
+        <button class="btn-main" style="background:#888" onclick="document.getElementById('admin-panel').style.display='none'">FECHAR</button>
+    </div>
 
     <script>
         const synth = window.speechSynthesis;
-        let avatarSel = "⚔️", narrar = false, combo = 0, shield = false;
+        let avatarSel = "⚔️", narrar = false, activeTab = 'ads', currentSlide = 0;
         let nvlConfig = [
             { min: 2, max: 5, tempo: 10, dano: 20, nome: "Nível 1" },
             { min: 2, max: 9, tempo: 8, dano: 25, nome: "Nível 2" },
@@ -110,9 +167,47 @@
         ];
         let curLvl = 0, ativo = false, vida = 100, acertos = 0, tentativas = 0, res, crono, tempoRestante;
 
+        // SISTEMA DE VOZ
         function falar(t) { if(narrar) { synth.cancel(); const m = new SpeechSynthesisUtterance(t); m.lang='pt-BR'; synth.speak(m); } }
         function toggleTheme() { const isL = document.body.classList.toggle('light-mode'); localStorage.setItem('theme', isL?'light':'dark'); }
 
+        // BANNERS E MURAL
+        function renderBanner() {
+            const container = document.getElementById('banner-area');
+            let html = '', hasAds = false;
+            ['ad1','ad2','ad3'].forEach((id, idx) => {
+                const data = JSON.parse(localStorage.getItem('sp_' + id));
+                if(data && data.text) { 
+                    hasAds = true; 
+                    html += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="window.open('${data.dest}', '_blank')"><img src="${data.url}"><div class="slide-info"><p class="slide-title">${data.text}</p><p class="slide-text">${data.sub}</p></div></div>`; 
+                }
+            });
+            container.innerHTML = hasAds ? html : `<div class="slide active"><p style="color:#666">Anuncie aqui seu Comércio</p></div>`;
+            if(hasAds) setInterval(() => { const s = document.querySelectorAll('.slide'); if(s.length > 1) { s[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % s.length; s[currentSlide].classList.add('active'); } }, 5000);
+        }
+
+        function renderTestimonials() {
+            const container = document.getElementById('testi-area');
+            let html = '';
+            ['t1','t2','t3'].forEach(id => {
+                const data = JSON.parse(localStorage.getItem('testi_' + id));
+                if(data && data.name) html += `<div class="testi-card"><div class="testi-header"><img src="${data.img || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="testi-img"><div class="testi-name">${data.name}</div></div><div class="testi-text">"${data.text}"</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // ADMIN
+        function switchTab(t) { activeTab = t; document.getElementById('tab-ads').style.display = t === 'ads' ? 'block' : 'none'; document.getElementById('tab-testi').style.display = t === 'testi' ? 'block' : 'none'; }
+        function abrirAdmin() { if(prompt("Senha:") === "Food2024@") { document.getElementById('admin-panel').style.display='block'; carregarCampos(); carregarTestiCampos(); } }
+        function salvarGeral() {
+            if(activeTab === 'ads') { const id = document.getElementById('edit-select').value; localStorage.setItem('sp_'+id, JSON.stringify({ text: document.getElementById('edit-text').value, sub: document.getElementById('edit-sub').value, url: document.getElementById('edit-url').value, dest: document.getElementById('edit-dest').value })); }
+            else { const id = document.getElementById('edit-testi-sel').value; localStorage.setItem('testi_'+id, JSON.stringify({ name: document.getElementById('t-name').value, img: document.getElementById('t-img').value, text: document.getElementById('t-text').value })); }
+            alert("Salvo!"); location.reload();
+        }
+        function carregarCampos() { const data = JSON.parse(localStorage.getItem('sp_'+document.getElementById('edit-select').value)) || {text:"", sub:"", url:"", dest:""}; document.getElementById('edit-text').value = data.text; document.getElementById('edit-sub').value = data.sub; document.getElementById('edit-url').value = data.url; document.getElementById('edit-dest').value = data.dest; }
+        function carregarTestiCampos() { const data = JSON.parse(localStorage.getItem('testi_'+document.getElementById('edit-testi-sel').value)) || {name:"", img:"", text:""}; document.getElementById('t-name').value = data.name; document.getElementById('t-img').value = data.img; document.getElementById('t-text').value = data.text; }
+
+        // JOGO
         function validarProgresso() {
             const nome = document.getElementById('nome-aluno').value.trim();
             const prog = parseInt(localStorage.getItem('prog_'+nome)) || 0;
@@ -124,7 +219,7 @@
             const nome = document.getElementById('nome-aluno').value.trim();
             if(!nome) return alert("Digite seu nome!");
             const prog = parseInt(localStorage.getItem('prog_'+nome)) || 0;
-            if(l !== 'blitz' && l > prog) return alert("Vença o nível anterior!");
+            if(l !== 'blitz' && l > prog) return alert("Bloqueado!");
             curLvl = l;
             document.querySelectorAll('.lvl-btn').forEach(b => b.style.background = "white");
             document.getElementById(l === 'blitz' ? 'btn-blitz' : 'btn-'+l).style.background = "#eee";
@@ -195,30 +290,34 @@
                     return;
                 }
             }
-            alert(`Fim de jogo! ${efic}% de acerto no ${lvlTxt}`);
+            alert(`Fim! ${efic}% no ${lvlTxt}`);
             location.reload();
         }
 
         function salvarNoRanking(n, av, ef, lv) {
-            let rank = JSON.parse(localStorage.getItem('rank_tabuada')) || [];
+            let rank = JSON.parse(localStorage.getItem('rank_tab_v2')) || [];
             rank.push({ nome: n, avatar: av, efic: ef, lvl: lv });
-            // Ordena por Nível (Nível 3 > Nível 2 > Nível 1) e depois por %
             rank.sort((a, b) => b.lvl.localeCompare(a.lvl) || b.efic - a.efic);
-            localStorage.setItem('rank_tabuada', JSON.stringify(rank.slice(0, 10)));
+            localStorage.setItem('rank_tab_v2', JSON.stringify(rank.slice(0, 10)));
         }
 
         function verRanking() {
-            const rank = JSON.parse(localStorage.getItem('rank_tabuada')) || [];
+            const rank = JSON.parse(localStorage.getItem('rank_tab_v2')) || [];
             document.getElementById('ranking-list').innerHTML = rank.map(item => `
                 <div class="rank-item">
                     <span>${item.avatar} <b>${item.nome}</b></span>
                     <span>${item.efic}% (${item.lvl})</span>
                 </div>
-            `).join('') || "Sem recordes ainda!";
+            `).join('') || "Sem recordes!";
             document.getElementById('ranking-box').style.display='block';
         }
 
-        window.onload = () => { if(localStorage.getItem('theme') === 'light') toggleTheme(); };
+        function selAvatar(el, icon) { document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected')); el.classList.add('selected'); avatarSel = icon; }
+
+        window.onload = () => { 
+            if(localStorage.getItem('theme') === 'light') toggleTheme(); 
+            renderBanner(); renderTestimonials();
+        };
         document.addEventListener("keydown", (e) => { if(e.key === "Enter" && ativo) check(); });
     </script>
 </body>
